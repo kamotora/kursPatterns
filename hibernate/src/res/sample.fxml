@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.chart.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="499.0" prefWidth="724.0" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <TabPane layoutY="29.0" prefHeight="470.0" prefWidth="724.0" tabClosingPolicy="UNAVAILABLE">
+        <tabs>
+          <Tab fx:id="expendTab" text="Расходы">
+            <content>
+              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="422.0" prefWidth="725.0">
+                     <children>
+                        <TableView fx:id="expendTableView" layoutX="8.0" layoutY="7.0" prefHeight="257.0" prefWidth="384.0" />
+                        <Button layoutX="14.0" layoutY="386.0" mnemonicParsing="false" onAction="#addExpend" text="Добавить" />
+                        <Button layoutX="100.0" layoutY="386.0" mnemonicParsing="false" onAction="#changeExpand" text="Изменить" />
+                        <Button layoutX="189.0" layoutY="386.0" mnemonicParsing="false" onAction="#deleteExpand" text="Удалить" />
+                        <PieChart fx:id="expendChart" layoutX="395.0" layoutY="8.0" prefHeight="254.0" prefWidth="324.0" />
+                        <Label layoutX="14.0" layoutY="280.0" text="Сегодня:" />
+                         <Label fx:id="todayExpendLabel" layoutX="80.0" layoutY="280.0" text="0.0р" />
+
+                         <Label layoutX="14.0" layoutY="300.0" text="За неделю:" />
+                         <Label fx:id="weekExpendLabel" layoutX="80.0" layoutY="300.0" text="0.0р" />
+
+                         <Label layoutX="14.0" layoutY="320.0" text="За месяц:" />
+                         <Label fx:id="monthExpendLabel" layoutX="80.0" layoutY="320.0" text="0.0р" />
+
+                         <Label layoutX="14.0" layoutY="340.0" text="Всего:" />
+                         <Label fx:id="allExpendLabel" layoutX="80.0" layoutY="340.0" text="0.0р" />
+                        <Label layoutX="395.0" layoutY="10.0" text="За текущий месяц" />
+                        <Label fx:id="msgExpend" layoutX="148.0" layoutY="280.0" textFill="#d00606" />
+                     </children></AnchorPane>
+            </content>
+          </Tab>
+            <Tab fx:id="profitTab" text="Доходы">
+                <content>
+                    <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="422.0" prefWidth="725.0">
+                        <children>
+                            <TableView fx:id="profitTableView" layoutX="8.0" layoutY="7.0" prefHeight="257.0" prefWidth="384.0" />
+                            <Button layoutX="14.0" layoutY="386.0" mnemonicParsing="false" onAction="#addProfit" text="Добавить" />
+                            <Button layoutX="100.0" layoutY="386.0" mnemonicParsing="false" onAction="#changeProfit" text="Изменить" />
+                            <Button layoutX="189.0" layoutY="386.0" mnemonicParsing="false" onAction="#deleteProfit" text="Удалить" />
+                            <PieChart fx:id="profitChart" layoutX="395.0" layoutY="8.0" prefHeight="254.0" prefWidth="324.0" />
+                            <Label layoutX="14.0" layoutY="280.0" text="Сегодня:" />
+                            <Label fx:id="todayProfitLabel" layoutX="80.0" layoutY="280.0" text="0.0р" />
+
+                            <Label layoutX="14.0" layoutY="300.0" text="За неделю:" />
+                            <Label fx:id="weekProfitLabel" layoutX="80.0" layoutY="300.0" text="0.0р" />
+
+                            <Label layoutX="14.0" layoutY="320.0" text="За месяц:" />
+                            <Label fx:id="monthProfitLabel" layoutX="80.0" layoutY="320.0" text="0.0р" />
+
+                            <Label layoutX="14.0" layoutY="340.0" text="Всего:" />
+                            <Label fx:id="allProfitLabel" layoutX="80.0" layoutY="340.0" text="0.0р" />
+                            <Label layoutX="395.0" layoutY="10.0" text="За текущий месяц" />
+                            <Label fx:id="msgProfit" layoutX="148.0" layoutY="280.0" textFill="#d00606" />
+                        </children></AnchorPane>
+                </content>
+            </Tab>
+            <Tab fx:id="transferTab" text="Переводы">
+                <content>
+                    <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="422.0" prefWidth="725.0">
+                        <children>
+                            <TableView fx:id="transferTableView" layoutX="8.0" layoutY="7.0" prefHeight="257.0" prefWidth="384.0" />
+                            <Button layoutX="14.0" layoutY="386.0" mnemonicParsing="false" onAction="#addTransfer" text="Добавить" />
+                            <Button layoutX="100.0" layoutY="386.0" mnemonicParsing="false" onAction="#changeTransfer" text="Изменить" />
+                            <Button layoutX="189.0" layoutY="386.0" mnemonicParsing="false" onAction="#deleteTransfer" text="Удалить" />
+                            <PieChart fx:id="transferChart" layoutX="395.0" layoutY="8.0" prefHeight="254.0" prefWidth="324.0" />
+                            <Label layoutX="14.0" layoutY="280.0" text="Сегодня:" />
+                            <Label fx:id="todayTransferLabel" layoutX="80.0" layoutY="280.0" text="0.0р" />
+
+                            <Label layoutX="14.0" layoutY="300.0" text="За неделю:" />
+                            <Label fx:id="weekTransferLabel" layoutX="80.0" layoutY="300.0" text="0.0р" />
+
+                            <Label layoutX="14.0" layoutY="320.0" text="За месяц:" />
+                            <Label fx:id="monthTransferLabel" layoutX="80.0" layoutY="320.0" text="0.0р" />
+
+                            <Label layoutX="14.0" layoutY="340.0" text="Всего:" />
+                            <Label fx:id="allTransferLabel" layoutX="80.0" layoutY="340.0" text="0.0р" />
+                            <Label layoutX="395.0" layoutY="10.0" text="За текущий месяц" />
+                            <Label fx:id="msgTransfer" layoutX="148.0" layoutY="280.0" textFill="#d00606" />
+                        </children></AnchorPane>
+                </content>
+            </Tab>
+        </tabs>
+      </TabPane>
+      <MenuBar layoutX="6.0" layoutY="0.0">
+        <menus>
+          <Menu mnemonicParsing="false" text="Пользователь">
+            <items>
+                  <MenuItem mnemonicParsing="false" onAction="#changePassword" text="Сменить пароль" />
+              <MenuItem mnemonicParsing="false" text="Выйти" />
+            </items>
+          </Menu>
+          <Menu mnemonicParsing="false" text="Категории">
+            <items>
+              <MenuItem mnemonicParsing="false" onAction="#showAllCategories" text="Посмотреть список категорий" />
+                  <MenuItem mnemonicParsing="false" onAction="#addCategory" text="Добавить категорию" />
+            </items>
+          </Menu>
+          <Menu mnemonicParsing="false" text="Счета">
+            <items>
+              <MenuItem mnemonicParsing="false" onAction="#showAllBills" text="Посмотреть список счетов" />
+                  <MenuItem mnemonicParsing="false" text="Добавить счет" />
+            </items>
+          </Menu>
+            <Menu mnemonicParsing="false" text="Лимиты">
+               <items>
+                  <MenuItem mnemonicParsing="false" onAction="#showAllLimits" text="Посмотреть лимиты" />
+                  <MenuItem mnemonicParsing="false" onAction="#addLimit" text="Добавить лимит" />
+               </items>
+            </Menu>
+        </menus>
+      </MenuBar>
+   </children>
+</AnchorPane>

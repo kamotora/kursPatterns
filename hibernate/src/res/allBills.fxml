@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <TableView fx:id="tableView" layoutX="7.0" prefHeight="269.0" prefWidth="587.0" />
+      <Button layoutX="14.0" layoutY="278.0" mnemonicParsing="false" onAction="#addBill" text="Добавить" />
+      <Button layoutX="96.0" layoutY="278.0" mnemonicParsing="false" onAction="#changeBill" text="Изменить" />
+      <Button layoutX="184.0" layoutY="278.0" mnemonicParsing="false" onAction="#removeBill" text="Удалить" />
+      <Label layoutX="17.0" layoutY="318.0" text="Средств на всех счетах: " />
+      <Label fx:id="sumLabel" layoutX="157.0" layoutY="318.0" />
+   </children>
+</AnchorPane>

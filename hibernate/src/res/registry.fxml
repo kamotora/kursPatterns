@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="193.0" prefWidth="478.0" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <Label layoutX="27.0" layoutY="30.0" text="Логин" />
+      <TextField fx:id="loginField" layoutX="180.0" layoutY="26.0" prefHeight="25.0" prefWidth="236.0" />
+      <Label layoutX="27.0" layoutY="60.0" text="Введите старый пароль" />
+      <PasswordField fx:id="oldPassword" layoutX="180.0" layoutY="56.0" prefHeight="25.0" prefWidth="236.0" />
+      <Label layoutX="27.0" layoutY="90.0" text="Введите новый пароль" />
+      <PasswordField fx:id="newPassword1" layoutX="180.0" layoutY="86.0" prefHeight="25.0" prefWidth="236.0" />
+      <Label layoutX="27.0" layoutY="120.0" text="Повторите новый пароль" />
+      <PasswordField fx:id="newPassword2" layoutX="180.0" layoutY="116.0" prefHeight="25.0" prefWidth="236.0" />
+      <Button fx:id="button" layoutX="180.0" layoutY="156.0" mnemonicParsing="false" onAction="#execute" text="Создать" />
+   </children>
+</AnchorPane>

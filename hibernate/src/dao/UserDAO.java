@@ -1,9 +1,9 @@
 package dao;
 
+import exceptions.UserAlreadyExistsException;
 import model.User;
 import util.HibernateSessionFactory;
 
-import javax.persistence.EntityManagerFactory;
 import javax.persistence.NoResultException;
 import java.util.List;
 

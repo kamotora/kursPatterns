@@ -1,6 +1,7 @@
 package controllers;
 
 import dao.CategoryDAO;
+import dao.CategoryFactory;
 import dao.TypeCategoryDAO;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
@@ -36,13 +37,13 @@ public class ControllerCategoryForm implements Initializable {
     ControllerCategoryForm(Category category){
         this.category = category;
     }
-    ControllerCategoryForm(TypeCategory typeCategory){
+    public ControllerCategoryForm(TypeCategory typeCategory){
         this.typeCategory = typeCategory;
     }
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        List<TypeCategory> types = new TypeCategoryDAO().getAll();
+        List<TypeCategory> types = TypeCategoryDAO.getInstanse().getAll();
         typeField.setItems(FXCollections.observableArrayList(types));
         if(category != null){
             nameField.setText(category.getName());
@@ -57,32 +58,22 @@ public class ControllerCategoryForm implements Initializable {
     }
 
     public void save(){
-        boolean isNewRow = false;
-        if(category == null) {
-            category = new Category();
-            isNewRow = true;
-        }
         if(nameField.getText().isEmpty()){
             MsgWindow.showErrorWindow("Введите название!");
             return;
         }
-        category.setName(nameField.getText());
         if(typeField.getValue() == null)
         {
             MsgWindow.showErrorWindow("Введите дату!");
             return;
         }
-        category.setType(typeField.getValue());
-        CategoryDAO categoryDAO = new CategoryDAO();
-        if(isNewRow) {
-            categoryDAO.save(category);
-        }
-        else
-            categoryDAO.update(category);
+        CategoryFactory.getInstance().getCategory(typeField.getValue(),nameField.getText());
         MsgWindow.showInfoWindow("Успешно!");
         curWindow.close();
     }
-
+    public void close(){
+        curWindow.close();
+    }
     public void showWindow(Stage mainWindow){
         FXMLLoader loader = new FXMLLoader(getClass().getClassLoader().getResource("res/category.fxml"));
         curWindow = new Stage();

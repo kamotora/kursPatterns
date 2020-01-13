@@ -1,17 +1,34 @@
 package dao;
 
+import controllers.IObservable;
+import controllers.IObserver;
 import model.Operation;
 import model.User;
 import model.categories.Category;
+import model.categories.TypeCategory;
 import util.HibernateSessionFactory;
 
 import java.sql.Date;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Hashtable;
 import java.util.List;
 
 
-public class OperationDAO extends DAO<Operation> {
+public class OperationDAO extends DAO<Operation> implements IObservable {
 
+    static OperationDAO instance = null;
+    private HashMap<TypeCategory, List<IObserver>> observers = new HashMap<>();
+
+    private OperationDAO() {
+    }
+
+    public static OperationDAO getInstance() {
+        if(instance == null)
+            instance = new OperationDAO();
+        return instance;
+    }
     public List<Operation> getAll(){
         return HibernateSessionFactory.getSession().createQuery("FROM Operation",Operation.class).getResultList();
     }
@@ -48,6 +65,12 @@ public class OperationDAO extends DAO<Operation> {
                 .setParameter("pkTransfer",3)
                 .getResultList();
     }
+    public List<Operation> getOperationsByType(User user, TypeCategory typeCategory){
+        return HibernateSessionFactory.getSession().createQuery("FROM Operation where user = :user and category.type.pkType = :pktype",Operation.class)
+                .setParameter("user", user)
+                .setParameter("pktype",typeCategory.getPkType())
+                .getResultList();
+    }
 
     public List<Operation> getOperationsByCategory(User user, Category category){
         return HibernateSessionFactory.getSession().createQuery("FROM Operation where user = :user and category.pkCategory = :pkCategory",Operation.class)
@@ -59,5 +82,32 @@ public class OperationDAO extends DAO<Operation> {
     @Override
     public Operation find(int id) {
         return HibernateSessionFactory.getSession().find(Operation.class,id);
+    }
+
+    public void addObserver(IObserver observer, TypeCategory typeCategory){
+        List<IObserver> list = observers.get(typeCategory);
+        if(list == null)
+            list = new ArrayList<>();
+        list.add(observer);
+        observers.put(typeCategory,list);
+    }
+
+    public void notifyObservers(TypeCategory typeCategory){
+        if(observers.get(typeCategory) == null)
+            return;
+        for(IObserver iObserver : observers.get(typeCategory))
+            iObserver.update();
+    }
+
+    @Override
+    public void saveOrUpdate(Operation entity) {
+        super.saveOrUpdate(entity);
+        notifyObservers(entity.getCategory().getType());
+    }
+
+    @Override
+    public void delete(Operation entity) {
+        super.delete(entity);
+        notifyObservers(entity.getCategory().getType());
     }
 }

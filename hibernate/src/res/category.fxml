@@ -9,12 +9,9 @@
       <Label layoutX="27.0" layoutY="30.0" text="Название категории" />
       <Label layoutX="27.0" layoutY="60.0" text="Тип категории" />
       <ChoiceBox fx:id="typeField" layoutX="156.0" layoutY="55.0" prefHeight="25.0" prefWidth="236.0" />
-      <Label layoutX="27.0" layoutY="90.0" text="Иконка" />
       <TextField fx:id="nameField" layoutX="156.0" layoutY="26.0" prefHeight="25.0" prefWidth="236.0" />
       <Button layoutX="20.0" layoutY="260.0" mnemonicParsing="false" onAction="#save" text="Добавить" />
-      <Button layoutX="332.0" layoutY="260.0" mnemonicParsing="false" text="Закрыть" />
-      <TextField layoutX="156.0" layoutY="86.0" prefHeight="25.0" prefWidth="150.0" />
+      <Button layoutX="332.0" layoutY="260.0" mnemonicParsing="false" onAction="#close" text="Закрыть" />
       <ImageView fitHeight="76.0" fitWidth="89.0" layoutX="156.0" layoutY="117.0" pickOnBounds="true" preserveRatio="true" />
-      <Button layoutX="309.0" layoutY="86.0" mnemonicParsing="false" text="Указать путь" />
    </children>
 </AnchorPane>

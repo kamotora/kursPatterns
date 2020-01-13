@@ -36,4 +36,20 @@ public class CategoryDAO extends DAO<Category> {
         return HibernateSessionFactory.getSession().createNamedQuery(Category.FIND_BY_TYPE, Category.class)
                 .setParameter("pkType",typeCategory.getPkType()).getResultList();
     }
+    public Category getCategory(TypeCategory typeCategory,String name){
+        return HibernateSessionFactory.getSession().createQuery("from Category  where name = :name and type = :type", Category.class)
+                .setParameter("name",name)
+                .setParameter("type",typeCategory)
+                .getSingleResult();
+    }
+    public Category addCategory(TypeCategory typeCategory, String name){
+        Category category = getCategory(typeCategory,name);
+        if(category == null) {
+            category = new Category();
+            category.setName(name);
+            category.setType(typeCategory);
+            saveOrUpdate(category);
+        }
+        return category;
+    }
 }

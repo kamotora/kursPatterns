@@ -1,9 +1,14 @@
 package model;
 
+import dao.BillDAO;
+import dao.OperationDAO;
+import exceptions.NegativeBalanceException;
+
 import javax.persistence.*;
 import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.Objects;
 
@@ -254,4 +259,29 @@ public class Operation {
         return result;
     }
 
+
+    public void executeIsNeed() throws NegativeBalanceException {
+        /*
+          Выполняем операцию, если нужно
+          */
+        if(isNeedExecuteNow()){
+            if(fromBill !=  null) {
+                fromBill.setSum(fromBill.getSum().subtract(sum));
+                if(fromBill.getSum().doubleValue() < 0){
+                   throw new NegativeBalanceException();
+                }
+                new BillDAO().update(fromBill);
+            }
+            if(toBill !=  null) {
+                toBill.setSum(toBill.getSum().add(sum));
+                new BillDAO().update(toBill);
+            }
+
+            if(nextexecute != null && (getNextDateExecuteWithoutTime().isBefore(LocalDate.now()) || getNextDateExecuteWithoutTime().isEqual(LocalDate.now()))){
+                setNextExecuteDateByPeriod();
+                date = nextexecute;
+            }
+            setDateExecute(Timestamp.valueOf(LocalDateTime.now()));
+        }
+    }
 }

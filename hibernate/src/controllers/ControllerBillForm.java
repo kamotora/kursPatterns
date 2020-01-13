@@ -27,7 +27,7 @@ public class ControllerBillForm implements Initializable {
     private TextField nameField;
     @FXML
     private TextArea noteField;
-    ControllerBillForm(Bill bill){
+    public ControllerBillForm(Bill bill){
         this.bill = bill;
     }
 
@@ -89,5 +89,9 @@ public class ControllerBillForm implements Initializable {
         curWindow.initModality(Modality.WINDOW_MODAL);
         curWindow.initOwner(mainWindow);
         curWindow.showAndWait();
+    }
+
+    public void close(){
+        curWindow.close();
     }
 }

@@ -42,8 +42,4 @@ public class HibernateSessionFactory {
         }
         return sessionFactory;
     }
-
-    public static void closeSession() throws HibernateException {
-        sessionFactory.getCurrentSession().close();
-    }
 }

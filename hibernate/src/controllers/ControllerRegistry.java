@@ -111,4 +111,7 @@ public class ControllerRegistry implements Initializable {
         window.initOwner(mainWindow);
         window.show();
     }
+    public void close(){
+        window.close();
+    }
 }

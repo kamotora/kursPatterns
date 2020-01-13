@@ -46,7 +46,9 @@ public class ControllerLogin {
             MsgWindow.showErrorWindow("Ошибка!\n"+e);
         }
     }
-
+    public void close(){
+        window.close();
+    }
     public void registry(){
         new ControllerRegistry(null).showWindow(window);
     }

@@ -95,7 +95,7 @@ public class Limit {
         List<Operation> operationList = new LimitDAO().getOperationsByLimit(this);
         double res = 0;
         for(Operation operation : operationList)
-            if(operation.getCategory().getType().equals(new TypeCategoryDAO().getExpandType()))
+            if(operation.getCategory().getType().equals(TypeCategoryDAO.getInstanse().getExpandType()))
                 res += operation.getSum().doubleValue();
         return res;
     }
@@ -104,7 +104,7 @@ public class Limit {
         List<Operation> operationList = new LimitDAO().getOperationsByLimit(this);
         double res = 0;
         for(Operation operation : operationList)
-            if(operation.getCategory().getType().equals(new TypeCategoryDAO().getProfitType()))
+            if(operation.getCategory().getType().equals(TypeCategoryDAO.getInstanse().getProfitType()))
                 res += operation.getSum().doubleValue();
         return res;
     }

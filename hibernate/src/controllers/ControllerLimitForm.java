@@ -47,7 +47,7 @@ public class ControllerLimitForm implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        List<model.categories.Category> categoryList = new CategoryDAO().getCategoryByType(new TypeCategoryDAO().getExpandType());
+        List<model.categories.Category> categoryList = new CategoryDAO().getCategoryByType(TypeCategoryDAO.getInstanse().getExpandType());
         List<Bill> billList = new BillDAO().getAll();
         if(limit != null){
             Date datestart = limit.getDatestart();
@@ -103,7 +103,7 @@ public class ControllerLimitForm implements Initializable {
             }
             Period period = Period.between(startDate,finishDate);
             LocalDate curStartDate = LocalDate.now().minus(period);
-            List<Operation> operations = new OperationDAO().getExpandsFromDate(currentUser,Date.valueOf(curStartDate));
+            List<Operation> operations = OperationDAO.getInstance().getExpandsFromDate(currentUser,Date.valueOf(curStartDate));
             double sum = 0;
             for(Operation operation : operations)
                 sum += operation.getSum().doubleValue();

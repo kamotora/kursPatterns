@@ -20,8 +20,16 @@ public class OperationBuilder {
     private Bill toBill;
     private User user;
     private Period period;
-    private String dateWithoutTime;
+    private Operation operation;
 
+    public OperationBuilder() {
+        operation = null;
+    }
+
+
+    public OperationBuilder(Operation operation) {
+        this.operation = operation;
+    }
     public void setDate(Timestamp date) {
         this.date = date;
     }
@@ -49,7 +57,29 @@ public class OperationBuilder {
         this.node = node;
     }
 
-    public void setNextexecute(Timestamp nextexecute) {
+    public void setNextExecute() {
+        LocalDate localDate = date.toLocalDateTime().toLocalDate();
+        if (period == null)
+            return;
+        switch (period.getPkPeriod()){
+            case 1:
+                nextexecute = Timestamp.valueOf(localDate.plusDays(1).atStartOfDay());
+                break;
+            case 2:
+                nextexecute = Timestamp.valueOf(localDate.plusWeeks(1).atStartOfDay());
+                break;
+            case 3:
+                nextexecute = Timestamp.valueOf(localDate.plusMonths(1).atStartOfDay());
+                break;
+            case 4:
+                nextexecute = null;
+                break;
+            default:
+                System.out.println("Неизвестный период");
+        }
+    }
+
+    public void setNextExecute(Timestamp nextexecute) {
         this.nextexecute = nextexecute;
     }
 
@@ -89,6 +119,9 @@ public class OperationBuilder {
                 case 3:
                     nextexecute = Timestamp.valueOf(date.toLocalDateTime().plusMonths(1));
                     break;
+                case 4:
+                    nextexecute = null;
+                    break;
                 default:
                     throw new Exception("Неизвестный тип периода");
             }
@@ -106,6 +139,23 @@ public class OperationBuilder {
         if(toBill == fromBill)
             throw new Exception("Одинаковые счета");
 
-        return new Operation(date,sum,node,nextexecute,category,fromBill,toBill,user,period);
+        if(operation == null)
+            operation = new Operation(date,sum,node,nextexecute,category,fromBill,toBill,user,period);
+        else {
+            operation.setUser(user);
+            operation.setDate(date);
+            operation.setCategory(category);
+            operation.setFromBill(fromBill);
+            operation.setToBill(toBill);
+            operation.setSum(sum);
+            operation.setPeriod(period);
+            operation.setNextExecuteDateByPeriod();
+            operation.setNode(node);
+        }
+        return operation;
+    }
+
+    public boolean isNewOperation(){
+        return operation == null;
     }
 }

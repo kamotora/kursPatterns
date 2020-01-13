@@ -6,6 +6,16 @@ import util.HibernateSessionFactory;
 import java.util.List;
 
 public class TypeCategoryDAO extends DAO<TypeCategory> {
+    private static TypeCategoryDAO instanse = null;
+    private TypeCategoryDAO(){
+    }
+
+    public static TypeCategoryDAO getInstanse() {
+        if(instanse == null)
+            instanse = new TypeCategoryDAO();
+        return instanse;
+    }
+
     @Override
     public TypeCategory find(int id) {
         return HibernateSessionFactory.getSession().find(TypeCategory.class, id);

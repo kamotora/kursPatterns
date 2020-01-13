@@ -5,6 +5,7 @@ import dao.OperationDAO;
 import dao.TypeCategoryDAO;
 import exceptions.FromBillNotChoosed;
 import exceptions.NegativeBalanceException;
+import interfaces.IState;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXMLLoader;
 import javafx.stage.Stage;
@@ -37,8 +38,7 @@ public class ExpendFormState implements IState {
 
     @Override
     public FXMLLoader getWindowLoader(Stage mainWindow) {
-        FXMLLoader loader = new FXMLLoader(getClass().getClassLoader().getResource("res/expend.fxml"));
-        return loader;
+        return new FXMLLoader(getClass().getClassLoader().getResource("res/expend.fxml"));
     }
 
     @Override

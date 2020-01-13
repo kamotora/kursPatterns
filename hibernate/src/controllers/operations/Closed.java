@@ -3,6 +3,7 @@ package controllers.operations;
 import exceptions.EqualsBills;
 import exceptions.FromBillNotChoosed;
 import exceptions.ToBillNotChoosed;
+import interfaces.IState;
 import javafx.fxml.FXMLLoader;
 import javafx.stage.Stage;
 import model.Operation;
@@ -26,12 +27,12 @@ public class Closed implements IState {
     }
 
     @Override
-    public void setBills() throws Exception {
+    public void setBills() {
 
     }
 
     @Override
-    public void saveBills(OperationBuilder operationBuilder) throws FromBillNotChoosed, ToBillNotChoosed, EqualsBills {
+    public void saveBills(OperationBuilder operationBuilder){
 
     }
 

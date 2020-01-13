@@ -1,4 +1,4 @@
-package controllers;
+package controllers.tabs;
 
 import dao.CategoryDAO;
 import dao.OperationDAO;

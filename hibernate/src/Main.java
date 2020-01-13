@@ -13,13 +13,13 @@ import javax.persistence.metamodel.EntityType;
 
 public class Main extends Application {
     @Override
-    public void start(Stage primaryStage) throws Exception{
+    public void start(Stage primaryStage){
         ControllerLogin controllerLogin = new ControllerLogin();
         controllerLogin.showWindow();
     }
 
 
-    public static void main(String[] args) throws Exception {
+    public static void main(String[] args){
         final Session session = HibernateSessionFactory.getSession();
         try {
             System.out.println("querying all the managed entities...");

@@ -1,13 +1,9 @@
 package model;
 
 import util.BCrypt;
-import util.Password;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Objects;
-import java.util.Set;
 
 @Entity
 @NamedQueries({
@@ -50,7 +46,7 @@ public class User {
         return pass;
     }
 
-    public void setPass(String hashedPass) throws Exception {
+    public void setPass(String hashedPass) {
         //this.pass = Password.getSaltedHash(password);
         this.pass = hashedPass;
     }
@@ -59,7 +55,7 @@ public class User {
         this.pass = BCrypt.hashpw(password, BCrypt.gensalt());
     }
 
-    public boolean checkPassword(String password) throws Exception {
+    public boolean checkPassword(String password) {
         //return Password.check(password, this.pass);
         return BCrypt.checkpw(password, this.pass);
     }

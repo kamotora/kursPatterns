@@ -1,4 +1,4 @@
-package controllers.operations;
+package interfaces;
 
 import exceptions.EqualsBills;
 import exceptions.FromBillNotChoosed;

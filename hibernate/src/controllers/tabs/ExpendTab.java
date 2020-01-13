@@ -1,21 +1,12 @@
-package controllers;
+package controllers.tabs;
 
-import exceptions.NegativeBalanceException;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
-import javafx.scene.chart.PieChart;
+import interfaces.IObserver;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.cell.PropertyValueFactory;
 import model.Bill;
 import model.Operation;
-import model.categories.Category;
 
-import java.math.BigDecimal;
-import java.time.LocalDate;
-import java.util.List;
-import java.util.Set;
-
-public class ProfitTab extends MyTab implements IObserver{
+public class ExpendTab extends MyTab implements IObserver {
     @Override
     public void createTable(){
         super.createTable();
@@ -26,7 +17,6 @@ public class ProfitTab extends MyTab implements IObserver{
     }
     @Override
     public void update() {
-        super.update(typeCategoryDAO.getProfitType());
+        super.update(typeCategoryDAO.getExpandType());
     }
-
 }

@@ -7,6 +7,7 @@ import exceptions.EqualsBills;
 import exceptions.FromBillNotChoosed;
 import exceptions.NegativeBalanceException;
 import exceptions.ToBillNotChoosed;
+import interfaces.IState;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXMLLoader;
 import javafx.stage.Stage;
@@ -18,7 +19,7 @@ import util.MsgWindow;
 
 import java.util.List;
 
-public class TransferFormState implements IState{
+public class TransferFormState implements IState {
     ControllerOperationForm form;
     Operation operation;
 
@@ -39,8 +40,7 @@ public class TransferFormState implements IState{
 
     @Override
     public FXMLLoader getWindowLoader(Stage mainWindow) {
-        FXMLLoader loader = new FXMLLoader(getClass().getClassLoader().getResource("res/transfer.fxml"));
-        return loader;
+        return new FXMLLoader(getClass().getClassLoader().getResource("res/transfer.fxml"));
     }
 
     @Override

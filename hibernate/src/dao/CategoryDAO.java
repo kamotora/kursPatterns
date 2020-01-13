@@ -1,5 +1,6 @@
 package dao;
 
+import exceptions.DublicateCategory;
 import model.categories.Category;
 import model.categories.TypeCategory;
 import util.HibernateSessionFactory;
@@ -36,13 +37,18 @@ public class CategoryDAO extends DAO<Category> {
         return HibernateSessionFactory.getSession().createNamedQuery(Category.FIND_BY_TYPE, Category.class)
                 .setParameter("pkType",typeCategory.getPkType()).getResultList();
     }
-    public Category getCategory(TypeCategory typeCategory,String name){
-        return HibernateSessionFactory.getSession().createQuery("from Category  where name = :name and type = :type", Category.class)
+    public Category getCategory(TypeCategory typeCategory,String name) throws DublicateCategory {
+        List<Category> res = HibernateSessionFactory.getSession().createQuery("from Category  where name = :name and type = :type", Category.class)
                 .setParameter("name",name)
                 .setParameter("type",typeCategory)
-                .getSingleResult();
+                .getResultList();
+        if(res.isEmpty())
+            return null;
+        if(res.size() > 1)
+            throw new DublicateCategory();
+        return res.get(0);
     }
-    public Category addCategory(TypeCategory typeCategory, String name){
+    public Category addCategory(TypeCategory typeCategory, String name) throws DublicateCategory {
         Category category = getCategory(typeCategory,name);
         if(category == null) {
             category = new Category();

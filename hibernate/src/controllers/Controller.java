@@ -1,6 +1,9 @@
 package controllers;
 
 import controllers.operations.*;
+import controllers.tabs.ExpendTab;
+import controllers.tabs.ProfitTab;
+import controllers.tabs.TransferTab;
 import dao.BillDAO;
 import dao.CategoryDAO;
 import dao.OperationDAO;
@@ -13,20 +16,14 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.chart.PieChart;
 import javafx.scene.control.Label;
-import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
-import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
-import model.Bill;
 import model.Operation;
-import model.Period;
 import model.User;
 import util.MsgWindow;
 
 import java.io.IOException;
-import java.math.BigDecimal;
 import java.net.URL;
-import java.time.LocalDate;
 import java.util.ResourceBundle;
 
 public class Controller implements Initializable {
@@ -113,15 +110,15 @@ public class Controller implements Initializable {
         transferTab.update();
     }
 
-    public void addExpend(ActionEvent actionEvent) throws IOException {
+    public void addExpend(ActionEvent actionEvent) {
         controllerOperationForm.setState(new ExpendFormState(controllerOperationForm,null));
         controllerOperationForm.showWindow(mainWindow);
     }
-    public void addProfit(ActionEvent actionEvent) throws IOException {
+    public void addProfit(ActionEvent actionEvent){
         controllerOperationForm.setState(new ProfitFormState(controllerOperationForm,null));
         controllerOperationForm.showWindow(mainWindow);
     }
-    public void addTransfer(ActionEvent actionEvent) throws IOException {
+    public void addTransfer(ActionEvent actionEvent){
         controllerOperationForm.setState(new TransferFormState(controllerOperationForm,null));
         controllerOperationForm.showWindow(mainWindow);
     }

@@ -6,10 +6,10 @@ import dao.*;
 import exceptions.EqualsBills;
 import exceptions.FromBillNotChoosed;
 import exceptions.ToBillNotChoosed;
+import interfaces.IState;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
@@ -22,11 +22,9 @@ import util.MsgWindow;
 
 import java.io.IOException;
 import java.math.BigDecimal;
-import java.net.URL;
 import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.util.List;
-import java.util.ResourceBundle;
 
 public class ControllerOperationForm{
     Stage curWindow;
@@ -103,7 +101,7 @@ public class ControllerOperationForm{
     }
 
     public void addCategory(){
-        ControllerCategoryForm controllerCategoryForm = new ControllerCategoryForm(TypeCategoryDAO.getInstanse().getProfitType());
+        ControllerCategoryForm controllerCategoryForm = new ControllerCategoryForm(state.getType());
         controllerCategoryForm.showWindow(curWindow);
         updateCategoryList();
     }

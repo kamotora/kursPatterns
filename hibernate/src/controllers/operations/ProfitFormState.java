@@ -5,6 +5,7 @@ import dao.OperationDAO;
 import dao.TypeCategoryDAO;
 import exceptions.NegativeBalanceException;
 import exceptions.ToBillNotChoosed;
+import interfaces.IState;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXMLLoader;
 import javafx.stage.Stage;
@@ -15,7 +16,7 @@ import model.categories.TypeCategory;
 
 import java.util.List;
 
-public class ProfitFormState implements IState{
+public class ProfitFormState implements IState {
     ControllerOperationForm form;
     Operation operation;
 
@@ -36,8 +37,7 @@ public class ProfitFormState implements IState{
 
     @Override
     public FXMLLoader getWindowLoader(Stage mainWindow) {
-        FXMLLoader loader = new FXMLLoader(getClass().getClassLoader().getResource("res/profit.fxml"));
-        return loader;
+        return  new FXMLLoader(getClass().getClassLoader().getResource("res/profit.fxml"));
     }
 
     @Override

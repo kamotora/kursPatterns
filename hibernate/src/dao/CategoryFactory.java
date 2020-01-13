@@ -1,7 +1,9 @@
 package dao;
 
+import exceptions.DublicateCategory;
 import model.categories.Category;
 import model.categories.TypeCategory;
+import util.MsgWindow;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -29,11 +31,18 @@ public class CategoryFactory {
                 break;
             }
         if(category == null) {
-            category = categoryDAO.getCategory(typeCategory, name);
-            if(category == null){
-                category = categoryDAO.addCategory(typeCategory,name);
+            try {
+
+                category = categoryDAO.getCategory(typeCategory, name);
+                if(category == null){
+                    category = categoryDAO.addCategory(typeCategory,name);
+                }
+                categories.add(category);
+
+            }catch (DublicateCategory e){
+                MsgWindow.showErrorWindow(e.toString());
+                e.printStackTrace();
             }
-            categories.add(category);
         }
         return category;
     }

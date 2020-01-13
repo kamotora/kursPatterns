@@ -1,7 +1,7 @@
 package dao;
 
-import controllers.IObservable;
-import controllers.IObserver;
+import interfaces.IObservable;
+import interfaces.IObserver;
 import model.Operation;
 import model.User;
 import model.categories.Category;
@@ -9,10 +9,8 @@ import model.categories.TypeCategory;
 import util.HibernateSessionFactory;
 
 import java.sql.Date;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Hashtable;
 import java.util.List;
 
 

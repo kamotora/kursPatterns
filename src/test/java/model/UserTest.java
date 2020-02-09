@@ -1,20 +1,21 @@
 package model;
 
+
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 
 public class UserTest {
     private User user;
     @Before
-    public void setUp() throws Exception {
+    public void setUp()  {
         user = new User();
     }
 
     @After
-    public void tearDown() throws Exception {
+    public void tearDown()  {
         user = null;
     }
 

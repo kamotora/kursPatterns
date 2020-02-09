@@ -1,16 +1,21 @@
 package model;
 
 import dao.UserDAO;
+import junit.framework.TestCase;
 import model.categories.Category;
 import org.junit.Assert;
 import org.junit.jupiter.api.Test;
+import org.junit.runner.RunWith;
+import org.junit.runners.JUnit4;
+import util.TestBCrypt;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class OperationBuilderTest {
+
+public class OperationBuilderTest {
 
     @Test
-    void create() {
+    public void testCreate() {
         OperationBuilder operationBuilder = new OperationBuilder();
         Assert.assertThrows("Не указан user",Exception.class, operationBuilder::create);
         operationBuilder.setUser(new UserDAO().findByLogin("test"));

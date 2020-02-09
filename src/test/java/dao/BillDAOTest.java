@@ -1,20 +1,18 @@
 package dao;
 
 import model.Bill;
+import org.junit.AfterClass;
 import org.junit.Assert;
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.Test;
+import org.junit.BeforeClass;
+import org.junit.Test;
 
 import java.math.BigDecimal;
 
-import static org.junit.jupiter.api.Assertions.*;
-
-class BillDAOTest {
+public class BillDAOTest {
     private static BillDAO billDAO;
     private static Bill bill;
-    @BeforeAll
-    static void beforeAll() {
+    @BeforeClass
+    public static void beforeAll() {
         billDAO = new BillDAO();
         bill = new Bill();
         bill.setName("test");
@@ -22,18 +20,18 @@ class BillDAOTest {
         billDAO.saveOrUpdate(bill);
     }
 
-    @AfterAll
-    static void afterAll() {
+    @AfterClass
+    public static void afterAll() {
         billDAO.delete(bill);
     }
 
     @Test
-    void getAll() {
+    public void getAll() {
         Assert.assertNotNull(billDAO.getAll());
     }
 
     @Test
-    void find() {
+    public void find() {
         Assert.assertNotNull(billDAO.find(bill.getPkBill()));
         Assert.assertEquals(bill.getPkBill(), billDAO.find(bill.getPkBill()).getPkBill());
     }

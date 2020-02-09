@@ -4,11 +4,8 @@ import exceptions.UserAlreadyExistsException;
 import model.Operation;
 import model.User;
 import model.categories.Category;
-import model.categories.TypeCategory;
-import org.junit.AfterClass;
-import org.junit.Assert;
-import org.junit.BeforeClass;
-import org.junit.jupiter.api.*;
+import org.junit.*;
+
 
 import java.math.BigDecimal;
 import java.sql.Date;
@@ -21,7 +18,7 @@ import java.util.Random;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class OperationDAOTest {
+public class OperationDAOTest {
     private static User userTest;
     private static OperationDAO operationDAO;
     private static List<Operation> operations;
@@ -29,8 +26,8 @@ class OperationDAOTest {
     /*
      * Добавим пользователя test:test
      * */
-    @BeforeAll
-    static void beforeAll() throws UserAlreadyExistsException {
+    @BeforeClass
+    public static void beforeAll() throws UserAlreadyExistsException {
         UserDAO userDAO = new UserDAO();
         String login = "test";
         String password = "test";
@@ -74,25 +71,25 @@ class OperationDAOTest {
         }
     }
 
-    @AfterAll
-    static void afterAll() {
+    @AfterClass
+    public static void afterAll() {
         for(Operation operation: operations)
             operationDAO.delete(operation);
     }
 
     @Test
-    void getInstance() {
+    public void getInstance() {
         Assert.assertNotNull(OperationDAO.getInstance());
     }
 
     @Test
-    void getAllByUser() {
+    public void getAllByUser() {
         Assert.assertEquals(operations.size(), operationDAO.getAllByUser(userTest).size());
         Assert.assertThrows(NullPointerException.class,() -> operationDAO.getAllByUser(null));
     }
 
     @Test
-    void getExpands() {
+    public void getExpands() {
         int size = 0;
         for(Operation operation : operations)
             if(operation.getCategory().getType().equals(TypeCategoryDAO.getInstanse().getExpandType()))
@@ -101,7 +98,7 @@ class OperationDAOTest {
     }
 
     @Test
-    void getExpandsFromDate() {
+    public void getExpandsFromDate() {
         int size = 0;
         for(Operation operation : operations)
             if(operation.getCategory().getType().equals(TypeCategoryDAO.getInstanse().getExpandType()))
@@ -110,7 +107,7 @@ class OperationDAOTest {
     }
 
     @Test
-    void getProfits() {
+    public void getProfits() {
         int size = 0;
         for(Operation operation : operations)
             if(operation.getCategory().getType().equals(TypeCategoryDAO.getInstanse().getProfitType()))
@@ -119,7 +116,7 @@ class OperationDAOTest {
     }
 
     @Test
-    void getTransfers() {
+    public void getTransfers() {
         int size = 0;
         for(Operation operation : operations)
             if(operation.getCategory().getType().equals(TypeCategoryDAO.getInstanse().getTransferType()))
@@ -128,7 +125,7 @@ class OperationDAOTest {
     }
 
     @Test
-    void getOperationsByType() {
+    public void getOperationsByType() {
         int size = 0;
         for(Operation operation : operations)
             if(operation.getCategory().getType().equals(TypeCategoryDAO.getInstanse().getTransferType()))
@@ -137,7 +134,7 @@ class OperationDAOTest {
     }
 
     @Test
-    void getOperationsByCategory() {
+    public void getOperationsByCategory() {
         int size = 0;
         for(Operation operation : operations)
             if(operation.getCategory().equals(categoryProfit))
@@ -147,7 +144,7 @@ class OperationDAOTest {
 
 
     @Test
-    void delete() {
+    public void delete() {
         Operation operation = new Operation();
         operation.setUser(userTest);
         operation.setSum(BigDecimal.valueOf(1111));

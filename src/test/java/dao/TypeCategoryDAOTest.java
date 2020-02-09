@@ -2,19 +2,19 @@ package dao;
 
 import model.categories.TypeCategory;
 import org.junit.Assert;
-import org.junit.jupiter.api.Test;
+import org.junit.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class TypeCategoryDAOTest {
+public class TypeCategoryDAOTest {
 
     @Test
-    void getInstanse() {
+    public  void getInstanse() {
         Assert.assertNotNull(TypeCategoryDAO.getInstanse());
     }
 
     @Test
-    void find() {
+    public  void find() {
         TypeCategory typeCategory = TypeCategoryDAO.getInstanse().getProfitType();
         Assert.assertEquals(typeCategory, TypeCategoryDAO.getInstanse().find(typeCategory.getPkType()));
 
@@ -31,22 +31,22 @@ class TypeCategoryDAOTest {
      * Должно быть 3 типа : доход, расход, перевод
      * */
     @Test
-    void getAll3Count() {
+    public void getAll3Count() {
         Assert.assertEquals(3, TypeCategoryDAO.getInstanse().getAll().size());
     }
 
     @Test
-    void getProfitTypeNotNull() {
+    public void getProfitTypeNotNull() {
         Assert.assertNotNull(TypeCategoryDAO.getInstanse().getProfitType());
     }
 
     @Test
-    void getExpandTypeNotNull() {
+    public void getExpandTypeNotNull() {
         Assert.assertNotNull(TypeCategoryDAO.getInstanse().getExpandType());
     }
 
     @Test
-    void getTransferTypeNotNull() {
+    public void getTransferTypeNotNull() {
         Assert.assertNotNull(TypeCategoryDAO.getInstanse().getTransferType());
     }
 }

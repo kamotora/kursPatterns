@@ -1,2 +1,3 @@
 # kursPatterns
-[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=org.patterns.kurs.kursPatterns&metric=alert_status)](https://sonarcloud.io/dashboard?id=org.patterns.kurs.kursPatterns)
+[![Coverage](https://sonarcloud.io/api/project_badges/measure?project=kamotora_kursPatterns&metric=coverage)](https://sonarcloud.io/dashboard?id=kamotora_kursPatterns)
+[![Lines of Code](https://sonarcloud.io/api/project_badges/measure?project=kamotora_kursPatterns&metric=ncloc)](https://sonarcloud.io/dashboard?id=kamotora_kursPatterns)

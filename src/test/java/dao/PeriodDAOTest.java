@@ -1,13 +1,10 @@
 package dao;
 
-import model.Bill;
 import model.Period;
 import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
-
-import java.math.BigDecimal;
 
 public class PeriodDAOTest {
     private static PeriodDAO periodDAO;

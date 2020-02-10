@@ -1,7 +1,6 @@
 package dao;
 
 import exceptions.UserAlreadyExistsException;
-import model.User;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;

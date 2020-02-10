@@ -2,8 +2,10 @@ package dao;
 
 import model.Limit;
 import model.Operation;
-import org.junit.*;
-
+import org.junit.AfterClass;
+import org.junit.Assert;
+import org.junit.BeforeClass;
+import org.junit.Test;
 
 import java.math.BigDecimal;
 import java.sql.Date;
@@ -11,8 +13,6 @@ import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 public class LimitDAOTest {
     private static Limit testLimit;

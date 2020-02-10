@@ -1,6 +1,9 @@
 package controllers;
 
-import dao.*;
+import dao.CategoryDAO;
+import dao.OperationDAO;
+import dao.TypeCategoryDAO;
+import dao.UserDAO;
 import exceptions.UserAlreadyExistsException;
 import model.Limit;
 import model.Operation;
@@ -9,8 +12,6 @@ import model.categories.Category;
 import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.BeforeClass;
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.Test;
 
 import java.math.BigDecimal;
@@ -27,6 +28,9 @@ public class ControllerLimitFormTest {
     private static OperationDAO operationDAO;
     private static List<Operation> operations;
 
+    /**
+     * Добавим несколько операций пользователю test для дальнейших тестов
+     * */
     @BeforeClass
     public static void createOperations() throws UserAlreadyExistsException {
         testLimit = new Limit();
@@ -54,11 +58,19 @@ public class ControllerLimitFormTest {
             operations.add(operation);
         }
     }
+
+    /**
+     * Удалим созданные операции
+     * */
     @AfterClass
     public static void deleteOperations(){
         for(Operation operation:operations)
             operationDAO.delete(operation);
     }
+
+    /**
+     * Проверка правильности подсчёта суммы расходов за указанный период
+     * */
     @Test
     public void getSumOperationsByPeriod(){
         ControllerLimitForm controllerLimitForm = new ControllerLimitForm(testLimit,userTest);

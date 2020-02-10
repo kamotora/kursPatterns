@@ -3,7 +3,6 @@ package util;
 import model.*;
 import model.categories.Category;
 import model.categories.TypeCategory;
-import org.hibernate.HibernateException;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -14,16 +13,22 @@ public class HibernateSessionFactory {
     private static Session currentSession;
     private HibernateSessionFactory() {}
 
-    public static Session getSession() throws HibernateException {
-        if(sessionFactory == null)
-            sessionFactory = getSessionFactory();
+    public static Session getSession(){
+        if(sessionFactory == null){
+            try {
+                sessionFactory = getSessionFactory();
+            }
+            catch (NullPointerException e){
+                e.printStackTrace();
+            }
+        }
         if(currentSession != null && currentSession.isOpen())
             currentSession.close();
         currentSession = sessionFactory.openSession();
         return currentSession;
     }
 
-    public static SessionFactory getSessionFactory() {
+    public static SessionFactory getSessionFactory() throws NullPointerException {
         if (sessionFactory == null) {
             try {
                 Configuration  configuration = new Configuration().configure( );
@@ -42,6 +47,8 @@ public class HibernateSessionFactory {
                 System.out.println("Исключение!\n" + e);
             }
         }
+        if(sessionFactory == null)
+            throw new NullPointerException("Не удалось создать фабрику сессий");
         return sessionFactory;
     }
 }

@@ -1,10 +1,10 @@
 package dao;
 
 import model.categories.Category;
-import org.junit.*;
+import org.junit.After;
 import org.junit.Assert;
-
-import static org.junit.jupiter.api.Assertions.*;
+import org.junit.Before;
+import org.junit.Test;
 
 public class CategoryFactoryTest {
     private Category testCategory;
@@ -20,11 +20,17 @@ public class CategoryFactoryTest {
         new CategoryDAO().delete(testCategory);
     }
 
+    /**
+     * Должен создаваться объект фабрики (singletone), Объект фабрики not Null
+     * */
     @Test
     public void getInstance() {
         Assert.assertNotNull(CategoryFactory.getInstance());
     }
 
+    /**
+     * Должны получить именно ту категорию, которую запросили
+     * */
     @Test
     public void getCategory() {
         Assert.assertEquals(testCategory.getName(),

@@ -8,6 +8,10 @@ import org.junit.Test;
 
 public class OperationBuilderTest {
 
+    /**
+     * Проверка вызова исключений при отсутствии обязательных данных
+     * Проверка на успешное создание операции при корректных входных данных
+     * */
     @Test
     public void testCreate() {
         OperationBuilder operationBuilder = new OperationBuilder();

@@ -4,8 +4,10 @@ import exceptions.UserAlreadyExistsException;
 import model.Operation;
 import model.User;
 import model.categories.Category;
-import org.junit.*;
-
+import org.junit.AfterClass;
+import org.junit.Assert;
+import org.junit.BeforeClass;
+import org.junit.Test;
 
 import java.math.BigDecimal;
 import java.sql.Date;
@@ -16,16 +18,15 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-import static org.junit.jupiter.api.Assertions.*;
-
 public class OperationDAOTest {
     private static User userTest;
     private static OperationDAO operationDAO;
     private static List<Operation> operations;
     private static Category categoryExpend, categoryProfit, categoryTransfer;
-    /*
-     * Добавим пользователя test:test
-     * */
+    /**
+     * Добавим пользователя test:test, если его нет
+     * Создадим несколько операций каждого типа, добавим их в бд для дальнейших тестов
+     */
     @BeforeClass
     public static void beforeAll() throws UserAlreadyExistsException {
         UserDAO userDAO = new UserDAO();
@@ -71,21 +72,24 @@ public class OperationDAOTest {
         }
     }
 
+    /**
+     * Удалим созданные операции
+     * */
     @AfterClass
     public static void afterAll() {
         for(Operation operation: operations)
             operationDAO.delete(operation);
     }
 
+
     @Test
-    public void getInstance() {
+    public void getInstanceDAOIsNotNull() {
         Assert.assertNotNull(OperationDAO.getInstance());
     }
 
     @Test
     public void getAllByUser() {
         Assert.assertEquals(operations.size(), operationDAO.getAllByUser(userTest).size());
-        Assert.assertThrows(NullPointerException.class,() -> operationDAO.getAllByUser(null));
     }
 
     @Test
@@ -142,7 +146,9 @@ public class OperationDAOTest {
         Assert.assertEquals(size, operationDAO.getOperationsByCategory(userTest,categoryProfit).size());
     }
 
-
+    /**
+     * Добавим и удалим операцию, её не должно быть в базе после удаления
+     * */
     @Test
     public void delete() {
         Operation operation = new Operation();

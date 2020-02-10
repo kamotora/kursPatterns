@@ -5,6 +5,10 @@ import org.junit.Test;
 
 
 public class UserTest {
+
+    /**
+     * Правильно ли сравнивает пароль с существующим захешированным
+     * */
     @Test
     public void checkPassword() {
         User user = new User();

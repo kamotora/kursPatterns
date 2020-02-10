@@ -2,13 +2,10 @@ package util;
 
 import org.junit.Assert;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.JUnit4;
 
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 
-import static org.junit.jupiter.api.Assertions.*;
 
 
 public class DateUtilTest {

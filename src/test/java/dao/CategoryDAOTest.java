@@ -11,8 +11,6 @@ import org.junit.Test;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
-
 public class CategoryDAOTest {
     private static List<Category> categoryList;
     private static CategoryDAO categoryDAO;
@@ -65,7 +63,9 @@ public class CategoryDAOTest {
         Assert.assertNotNull(categoryDAO.getAll());
     }
 
-
+    /**
+     * Должна быть как минимум 1 категория каждого типа
+     * */
     @Test
     public void getCategoryByType() {
         Assert.assertNotNull(categoryDAO.getCategoryByType(profitTypeCategory));
@@ -79,8 +79,11 @@ public class CategoryDAOTest {
             Assert.assertEquals(category, categoryDAO.getCategory(category.getType(), category.getName()));
     }
 
+    /**
+     * Попытка добавить существующую категорию => исключение
+     * */
     @Test
-    public void addCategory() throws DublicateCategory {
+    public void addCategory(){
         for(Category category: categoryList)
             Assert.assertThrows(DublicateCategory.class, () -> categoryDAO.addCategory(category.getType(), category.getName()));
     }

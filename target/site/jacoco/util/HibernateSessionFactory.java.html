@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="ru"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>HibernateSessionFactory.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">kursPatterns</a> &gt; <a href="index.source.html" class="el_package">util</a> &gt; <span class="el_source">HibernateSessionFactory.java</span></div><h1>HibernateSessionFactory.java</h1><pre class="source lang-java linenums">package util;
+
+import model.*;
+import model.categories.Category;
+import model.categories.TypeCategory;
+import org.hibernate.HibernateException;
+import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+import org.hibernate.cfg.Configuration;
+
+public class HibernateSessionFactory {
+    private static SessionFactory sessionFactory;
+    private static Session currentSession;
+    private HibernateSessionFactory() {}
+
+    public static Session getSession() throws HibernateException {
+<span class="fc bfc" id="L18" title="All 2 branches covered.">        if(sessionFactory == null)</span>
+<span class="fc" id="L19">            sessionFactory = getSessionFactory();</span>
+<span class="fc bfc" id="L20" title="All 4 branches covered.">        if(currentSession != null &amp;&amp; currentSession.isOpen())</span>
+<span class="fc" id="L21">            currentSession.close();</span>
+<span class="fc" id="L22">        currentSession = sessionFactory.openSession();</span>
+<span class="fc" id="L23">        return currentSession;</span>
+    }
+
+    public static SessionFactory getSessionFactory() {
+<span class="fc bfc" id="L27" title="All 2 branches covered.">        if (sessionFactory == null) {</span>
+            try {
+<span class="fc" id="L29">                Configuration  configuration = new Configuration().configure( );</span>
+                //Configuration configuration = new Configuration().configure();
+<span class="fc" id="L31">                configuration.addAnnotatedClass(Category.class);</span>
+<span class="fc" id="L32">                configuration.addAnnotatedClass(Bill.class);</span>
+<span class="fc" id="L33">                configuration.addAnnotatedClass(Limit.class);</span>
+<span class="fc" id="L34">                configuration.addAnnotatedClass(Operation.class);</span>
+<span class="fc" id="L35">                configuration.addAnnotatedClass(Period.class);</span>
+<span class="fc" id="L36">                configuration.addAnnotatedClass(User.class);</span>
+<span class="fc" id="L37">                configuration.addAnnotatedClass(TypeCategory.class);</span>
+<span class="fc" id="L38">                StandardServiceRegistryBuilder builder = new StandardServiceRegistryBuilder().applySettings(configuration.getProperties());</span>
+<span class="fc" id="L39">                sessionFactory = configuration.buildSessionFactory(builder.build());</span>
+
+<span class="nc" id="L41">            } catch (Exception e) {</span>
+<span class="nc" id="L42">                System.out.println(&quot;Исключение!\n&quot; + e);</span>
+<span class="fc" id="L43">            }</span>
+        }
+<span class="fc" id="L45">        return sessionFactory;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.4.201905082037</span></div></body></html>

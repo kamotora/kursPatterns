@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="ru"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ControllerOperationForm.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">kursPatterns</a> &gt; <a href="index.source.html" class="el_package">controllers.operations</a> &gt; <span class="el_source">ControllerOperationForm.java</span></div><h1>ControllerOperationForm.java</h1><pre class="source lang-java linenums">package controllers.operations;
+
+import controllers.ControllerBillForm;
+import controllers.ControllerCategoryForm;
+import dao.*;
+import exceptions.EqualsBills;
+import exceptions.FromBillNotChoosed;
+import exceptions.ToBillNotChoosed;
+import interfaces.IState;
+import javafx.collections.FXCollections;
+import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.scene.control.*;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
+import model.*;
+import model.categories.Category;
+import util.DateUtil;
+import util.MsgWindow;
+
+import java.io.IOException;
+import java.math.BigDecimal;
+import java.sql.Timestamp;
+import java.time.LocalDate;
+import java.util.List;
+
+public class ControllerOperationForm{
+    Stage curWindow;
+    @FXML DatePicker dateField;
+    @FXML ChoiceBox&lt;Bill&gt; billToField;
+    @FXML ChoiceBox&lt;Bill&gt; billFromField;
+    @FXML ChoiceBox&lt;Category&gt; categoryField;
+    @FXML ChoiceBox&lt;Period&gt; periodField;
+    @FXML TextField sumField;
+    @FXML TextArea noteField;
+    @FXML Button saveButton;
+    private IState state;
+    private Operation operation;
+    private User currentUser;
+<span class="nc" id="L42">    public ControllerOperationForm(IState state, User user){</span>
+<span class="nc" id="L43">        this.state = state;</span>
+<span class="nc" id="L44">        this.operation = state.getOperation();</span>
+<span class="nc" id="L45">        this.currentUser = user;</span>
+<span class="nc" id="L46">    }</span>
+
+
+    public void save() {
+<span class="nc" id="L50">        Timestamp date = Timestamp.valueOf(dateField.getValue().atStartOfDay());</span>
+<span class="nc" id="L51">        Category category = categoryField.getValue();</span>
+<span class="nc bnc" id="L52" title="All 2 branches missed.">        if(category == null){</span>
+<span class="nc" id="L53">            MsgWindow.showErrorWindow(&quot;Категория не выбрана&quot;);</span>
+<span class="nc" id="L54">            return;</span>
+        }
+<span class="nc" id="L56">        Period period= periodField.getValue();</span>
+<span class="nc bnc" id="L57" title="All 2 branches missed.">        if(period == null){</span>
+<span class="nc" id="L58">            MsgWindow.showErrorWindow(&quot;Период повторения не выбран&quot;);</span>
+<span class="nc" id="L59">            return;</span>
+        }
+<span class="nc" id="L61">        String note = noteField.getText();</span>
+        BigDecimal sum;
+        try{
+<span class="nc" id="L64">            sum = BigDecimal.valueOf(Double.parseDouble(sumField.getText()));</span>
+<span class="nc" id="L65">        }catch (NumberFormatException exp){</span>
+<span class="nc" id="L66">            MsgWindow.showErrorWindow(&quot;Стоимость указана не верно&quot;);</span>
+<span class="nc" id="L67">            return;</span>
+<span class="nc" id="L68">        }</span>
+<span class="nc" id="L69">        OperationBuilder operationBuilder = new OperationBuilder(operation);</span>
+        try {
+<span class="nc" id="L71">            state.saveBills(operationBuilder);</span>
+<span class="nc" id="L72">        } catch (FromBillNotChoosed | ToBillNotChoosed | EqualsBills ex) {</span>
+<span class="nc" id="L73">            MsgWindow.showErrorWindow(ex.toString());</span>
+<span class="nc" id="L74">        }</span>
+<span class="nc" id="L75">        operationBuilder.setUser(currentUser);</span>
+<span class="nc" id="L76">        operationBuilder.setDate(date);</span>
+<span class="nc" id="L77">        operationBuilder.setCategory(category);</span>
+<span class="nc" id="L78">        operationBuilder.setSum(sum);</span>
+<span class="nc" id="L79">        operationBuilder.setPeriod(period);</span>
+<span class="nc" id="L80">        operationBuilder.setNextExecute();</span>
+<span class="nc" id="L81">        operationBuilder.setNode(note);</span>
+        try {
+<span class="nc bnc" id="L83" title="All 2 branches missed.">            if(state.addOperation(operationBuilder.create())) {</span>
+<span class="nc" id="L84">                MsgWindow.showInfoWindow(&quot;Выполнено!&quot;);</span>
+<span class="nc" id="L85">                curWindow.close();</span>
+            }
+<span class="nc" id="L87">        } catch (Exception e) {</span>
+<span class="nc" id="L88">            e.printStackTrace();</span>
+<span class="nc" id="L89">            MsgWindow.showErrorWindow(e.toString());</span>
+<span class="nc" id="L90">        }</span>
+<span class="nc" id="L91">    }</span>
+
+    public void addBill(){
+<span class="nc" id="L94">        ControllerBillForm controllerBillForm = new ControllerBillForm(null);</span>
+<span class="nc" id="L95">        controllerBillForm.showWindow(curWindow);</span>
+        try {
+<span class="nc" id="L97">            state.setBills();</span>
+<span class="nc" id="L98">        } catch (Exception e) {</span>
+<span class="nc" id="L99">            e.printStackTrace();</span>
+<span class="nc" id="L100">        }</span>
+<span class="nc" id="L101">    }</span>
+
+    public void addCategory(){
+<span class="nc" id="L104">        ControllerCategoryForm controllerCategoryForm = new ControllerCategoryForm(state.getType());</span>
+<span class="nc" id="L105">        controllerCategoryForm.showWindow(curWindow);</span>
+<span class="nc" id="L106">        updateCategoryList();</span>
+<span class="nc" id="L107">    }</span>
+
+    public void updateCategoryList(){
+<span class="nc" id="L110">        List&lt;Category&gt; categoryList = new CategoryDAO().getCategoryByType(state.getType());</span>
+<span class="nc" id="L111">        categoryField.setItems(FXCollections.observableArrayList(categoryList));</span>
+<span class="nc bnc" id="L112" title="All 2 branches missed.">        if(!categoryList.isEmpty())</span>
+<span class="nc" id="L113">            categoryField.setValue(categoryList.get(0));</span>
+<span class="nc" id="L114">    }</span>
+    public void showWindow(Stage mainWindow){
+<span class="nc" id="L116">        operation = state.getOperation();</span>
+<span class="nc" id="L117">        FXMLLoader loader = state.getWindowLoader(mainWindow);</span>
+<span class="nc" id="L118">        loader.setController(this);</span>
+        Parent root;
+        try{
+<span class="nc" id="L121">            root = loader.load();</span>
+<span class="nc" id="L122">        }catch (IOException ex){</span>
+<span class="nc" id="L123">            MsgWindow.showErrorWindow(&quot;Не получилось открыть новое окно&quot;);</span>
+<span class="nc" id="L124">            ex.printStackTrace();</span>
+<span class="nc" id="L125">            return;</span>
+<span class="nc" id="L126">        }</span>
+<span class="nc" id="L127">        curWindow = new Stage();</span>
+<span class="nc bnc" id="L128" title="All 2 branches missed.">        if(operation == null)</span>
+<span class="nc" id="L129">            curWindow.setTitle(&quot;Добавление &quot;+state.getType().getName()+&quot;a&quot;);</span>
+        else
+<span class="nc" id="L131">            curWindow.setTitle(&quot;Изменение &quot;+state.getType().getName()+&quot;a&quot;);</span>
+<span class="nc" id="L132">        curWindow.setScene(new Scene(root));</span>
+<span class="nc" id="L133">        curWindow.initModality(Modality.WINDOW_MODAL);</span>
+<span class="nc" id="L134">        curWindow.initOwner(mainWindow);</span>
+<span class="nc" id="L135">        updateCategoryList();</span>
+<span class="nc" id="L136">        List&lt;Period&gt; periodList = new PeriodDAO().getAll();</span>
+        try {
+<span class="nc" id="L138">            state.setBills();</span>
+<span class="nc" id="L139">        } catch (Exception e) {</span>
+<span class="nc" id="L140">            e.printStackTrace();</span>
+<span class="nc" id="L141">        }</span>
+<span class="nc" id="L142">        periodField.setItems(FXCollections.observableArrayList(periodList));</span>
+<span class="nc bnc" id="L143" title="All 2 branches missed.">        if(!periodList.isEmpty())</span>
+<span class="nc" id="L144">            periodField.setValue(periodList.get(3));</span>
+<span class="nc bnc" id="L145" title="All 2 branches missed.">        if(operation != null){</span>
+<span class="nc" id="L146">            Timestamp date = operation.getDate();</span>
+<span class="nc" id="L147">            dateField.setValue(LocalDate.of(DateUtil.getYear(date),DateUtil.getMonth(date), DateUtil.getDay(date)));</span>
+<span class="nc" id="L148">            sumField.setText(String.valueOf(operation.getSum()));</span>
+<span class="nc" id="L149">            noteField.setText(operation.getNode());</span>
+<span class="nc" id="L150">            saveButton.setText(&quot;Изменить&quot;);</span>
+<span class="nc" id="L151">            categoryField.setValue(operation.getCategory());</span>
+<span class="nc bnc" id="L152" title="All 2 branches missed.">            if (operation.getPeriod() != null)</span>
+<span class="nc" id="L153">                periodField.setValue(operation.getPeriod());</span>
+<span class="nc" id="L154">        }</span>
+        else {
+<span class="nc" id="L156">            dateField.setValue(LocalDate.now());</span>
+<span class="nc" id="L157">            saveButton.setText(&quot;Добавить&quot;);</span>
+        }
+
+<span class="nc" id="L160">        curWindow.showAndWait();</span>
+<span class="nc" id="L161">    }</span>
+
+    public void close(){
+<span class="nc" id="L164">        curWindow.close();</span>
+<span class="nc" id="L165">    }</span>
+
+    public void setState(IState state) {
+<span class="nc" id="L168">        this.state = state;</span>
+<span class="nc" id="L169">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.4.201905082037</span></div></body></html>

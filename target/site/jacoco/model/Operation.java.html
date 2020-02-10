@@ -1,0 +1,287 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="ru"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Operation.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">kursPatterns</a> &gt; <a href="index.source.html" class="el_package">model</a> &gt; <span class="el_source">Operation.java</span></div><h1>Operation.java</h1><pre class="source lang-java linenums">package model;
+
+import dao.BillDAO;
+import exceptions.NegativeBalanceException;
+
+import javax.persistence.*;
+import java.math.BigDecimal;
+import java.sql.Timestamp;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.Arrays;
+import java.util.Objects;
+
+@Entity
+public class Operation {
+    private Timestamp date;
+    private int pkOperation;
+    private BigDecimal sum;
+    private String node;
+    private Timestamp nextexecute;
+    private byte[] icon;
+    private model.categories.Category category;
+    private Bill fromBill;
+    private Bill toBill;
+    private User user;
+    private Period period;
+    private Timestamp dateExecute;
+    private LocalDate dateWithoutTime;
+
+<span class="fc" id="L30">    public Operation() {</span>
+<span class="fc" id="L31">    }</span>
+
+<span class="fc" id="L33">    public Operation(Timestamp date, BigDecimal sum, String node, Timestamp nextexecute, model.categories.Category category, Bill fromBill, Bill toBill, User user, Period period){</span>
+<span class="fc" id="L34">        this.sum = sum;</span>
+<span class="fc" id="L35">        this.node = node;</span>
+<span class="fc" id="L36">        this.nextexecute = nextexecute;</span>
+<span class="fc" id="L37">        this.category = category;</span>
+<span class="fc" id="L38">        this.fromBill = fromBill;</span>
+<span class="fc" id="L39">        this.toBill = toBill;</span>
+<span class="fc" id="L40">        this.user = user;</span>
+<span class="fc" id="L41">        this.period = period;</span>
+<span class="fc" id="L42">        setDate(date);</span>
+<span class="fc" id="L43">    }</span>
+    @Basic
+    @Column(name = &quot;date&quot;, nullable = false)
+    public Timestamp getDate() {
+<span class="fc" id="L47">        return date;</span>
+    }
+
+    public void setDate(Timestamp date) {
+<span class="fc" id="L51">        this.date = date;</span>
+<span class="fc" id="L52">        dateWithoutTime = date.toLocalDateTime().toLocalDate();</span>
+<span class="fc" id="L53">    }</span>
+
+    @Id
+    @Column(name = &quot;pk_operation&quot;, nullable = false)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    public int getPkOperation() {
+        return pkOperation;
+    }
+
+    public void setPkOperation(int pkOperation) {
+<span class="fc" id="L63">        this.pkOperation = pkOperation;</span>
+<span class="fc" id="L64">    }</span>
+
+    @Basic
+    @Column(name = &quot;sum&quot;, nullable = false, precision = 2)
+    public BigDecimal getSum() {
+<span class="fc" id="L69">        return sum;</span>
+    }
+
+    public void setSum(BigDecimal sum) {
+<span class="fc" id="L73">        this.sum = sum;</span>
+<span class="fc" id="L74">    }</span>
+
+    @Basic
+    @Column(name = &quot;node&quot;, nullable = true, length = -1)
+    public String getNode() {
+<span class="fc" id="L79">        return node;</span>
+    }
+
+    public void setNode(String node) {
+<span class="fc" id="L83">        this.node = node;</span>
+<span class="fc" id="L84">    }</span>
+
+    @Basic
+    @Column(name = &quot;nextexecute&quot;, nullable = true)
+    public Timestamp getNextexecute() {
+<span class="fc" id="L89">        return nextexecute;</span>
+    }
+
+    public void setNextexecute(Timestamp nextexecute) {
+<span class="fc" id="L93">        this.nextexecute = nextexecute;</span>
+<span class="fc" id="L94">    }</span>
+
+    @Basic
+    @Column(name = &quot;icon&quot;, nullable = true)
+    public byte[] getIcon() {
+<span class="fc" id="L99">        return icon;</span>
+    }
+
+
+
+    /**
+     * Категория операции
+     */
+    @ManyToOne(optional = true)
+    @JoinColumn(name = &quot;category&quot;)
+    public model.categories.Category getCategory() {
+<span class="fc" id="L110">        return category;</span>
+    }
+
+    /**
+     * Ссылка на счет, с которого сделан перевод
+     */
+    @ManyToOne(optional = true)
+    @JoinColumn(name = &quot;bill_from&quot;)
+    public Bill getFromBill() {
+<span class="fc" id="L119">        return fromBill;</span>
+    }
+
+    /**
+     * Ссылка на счет, на который сделан перевод
+     */
+    @ManyToOne(optional = true)
+    @JoinColumn(name = &quot;bill_to&quot;)
+    public Bill getToBill() {
+<span class="fc" id="L128">        return toBill;</span>
+    }
+
+    /**
+     * Пользователь, совершивший операцию
+     */
+    @ManyToOne(optional = true)
+    @JoinColumn(name = &quot;pk_user&quot;)
+    public User getUser() {
+<span class="fc" id="L137">        return user;</span>
+    }
+
+    /**
+     * Период повторения операции, если она периодическая
+     */
+    @ManyToOne(optional = true)
+    @JoinColumn(name = &quot;period&quot;)
+    public Period getPeriod() {
+<span class="fc" id="L146">        return period;</span>
+    }
+
+    /**
+     * Дата, когда операция была учтена
+     */
+    @Basic
+    @Column(name = &quot;dateExecute&quot;, nullable = true)
+    public Timestamp getDateExecute() {
+<span class="fc" id="L155">        return dateExecute;</span>
+    }
+    public void setDateExecute(Timestamp dateExecute) {
+<span class="fc" id="L158">        this.dateExecute = dateExecute;</span>
+<span class="fc" id="L159">    }</span>
+
+
+    @Transient
+    public LocalDate getDateExecuteWithoutTime() {
+<span class="nc bnc" id="L164" title="All 2 branches missed.">        if(dateExecute == null)</span>
+<span class="nc" id="L165">            return null;</span>
+<span class="nc" id="L166">        return dateExecute.toLocalDateTime().toLocalDate();</span>
+    }
+
+    @Transient
+    public LocalDate getNextDateExecuteWithoutTime() {
+<span class="nc bnc" id="L171" title="All 2 branches missed.">        if(nextexecute == null)</span>
+<span class="nc" id="L172">            return null;</span>
+<span class="nc" id="L173">        return nextexecute.toLocalDateTime().toLocalDate();</span>
+    }
+
+    @Transient
+    public LocalDate getDateWithoutTime() {
+<span class="nc" id="L178">        return dateWithoutTime;</span>
+    }
+    @Transient
+    public void setNextExecuteDateByPeriod(){
+<span class="nc bnc" id="L182" title="All 2 branches missed.">        if (period == null)</span>
+<span class="nc" id="L183">            return;</span>
+<span class="nc bnc" id="L184" title="All 5 branches missed.">        switch (period.getPkPeriod()){</span>
+            case 1:
+<span class="nc" id="L186">                nextexecute = Timestamp.valueOf(getDateWithoutTime().plusDays(1).atStartOfDay());</span>
+<span class="nc" id="L187">                break;</span>
+            case 2:
+<span class="nc" id="L189">                nextexecute = Timestamp.valueOf(getDateWithoutTime().plusWeeks(1).atStartOfDay());</span>
+<span class="nc" id="L190">                break;</span>
+            case 3:
+<span class="nc" id="L192">                nextexecute = Timestamp.valueOf(getDateWithoutTime().plusMonths(1).atStartOfDay());</span>
+<span class="nc" id="L193">                break;</span>
+            case 4:
+<span class="nc" id="L195">                nextexecute = null;</span>
+<span class="nc" id="L196">                break;</span>
+            default:
+<span class="nc" id="L198">                System.out.println(&quot;Неизвестный период&quot;);</span>
+        }
+<span class="nc" id="L200">    }</span>
+    @Transient
+    public boolean isNeedExecuteNow(){
+<span class="nc" id="L203">        LocalDate todayDate = LocalDate.now();</span>
+<span class="nc bnc" id="L204" title="All 6 branches missed.">        if(getDateExecuteWithoutTime() == null &amp;&amp; (getDateWithoutTime().isBefore(todayDate) || getDateWithoutTime().isEqual(todayDate)))</span>
+<span class="nc" id="L205">            return true;</span>
+<span class="nc bnc" id="L206" title="All 2 branches missed.">        if(getDateExecuteWithoutTime() != null){</span>
+<span class="nc bnc" id="L207" title="All 2 branches missed.">            if(getDateExecuteWithoutTime().isEqual(todayDate))</span>
+<span class="nc" id="L208">                return false;</span>
+<span class="nc bnc" id="L209" title="All 6 branches missed.">            return getNextDateExecuteWithoutTime() != null &amp;&amp; (getNextDateExecuteWithoutTime().isEqual(todayDate) || getNextDateExecuteWithoutTime().isBefore(todayDate) );</span>
+        }
+<span class="nc" id="L211">            return false;</span>
+    }
+    public void setDateWithoutTime(LocalDate dateWithoutTime) {
+<span class="nc" id="L214">        this.dateWithoutTime = dateWithoutTime;</span>
+<span class="nc" id="L215">    }</span>
+
+    public void setIcon(byte[] icon) {
+<span class="fc" id="L218">        this.icon = icon;</span>
+<span class="fc" id="L219">    }</span>
+
+    public void setCategory(model.categories.Category category) {
+<span class="fc" id="L222">        this.category = category;</span>
+<span class="fc" id="L223">    }</span>
+
+    public void setFromBill(Bill fromBill) {
+<span class="fc" id="L226">        this.fromBill = fromBill;</span>
+<span class="fc" id="L227">    }</span>
+
+    public void setToBill(Bill toBill) {
+<span class="fc" id="L230">        this.toBill = toBill;</span>
+<span class="fc" id="L231">    }</span>
+
+    public void setUser(User user) {
+<span class="fc" id="L234">        this.user = user;</span>
+<span class="fc" id="L235">    }</span>
+
+    public void setPeriod(Period period) {
+<span class="fc" id="L238">        this.period = period;</span>
+<span class="fc" id="L239">    }</span>
+
+    @Override
+    public boolean equals(Object o) {
+<span class="nc bnc" id="L243" title="All 2 branches missed.">        if (this == o) return true;</span>
+<span class="nc bnc" id="L244" title="All 4 branches missed.">        if (o == null || getClass() != o.getClass()) return false;</span>
+<span class="nc" id="L245">        Operation operation = (Operation) o;</span>
+<span class="nc bnc" id="L246" title="All 2 branches missed.">        return pkOperation == operation.pkOperation &amp;&amp;</span>
+<span class="nc bnc" id="L247" title="All 2 branches missed.">                Objects.equals(date, operation.date) &amp;&amp;</span>
+<span class="nc bnc" id="L248" title="All 2 branches missed.">                Objects.equals(sum, operation.sum) &amp;&amp;</span>
+<span class="nc bnc" id="L249" title="All 2 branches missed.">                Objects.equals(node, operation.node) &amp;&amp;</span>
+<span class="nc bnc" id="L250" title="All 2 branches missed.">                Objects.equals(nextexecute, operation.nextexecute) &amp;&amp;</span>
+<span class="nc bnc" id="L251" title="All 2 branches missed.">                Arrays.equals(icon, operation.icon);</span>
+    }
+
+    @Override
+    public int hashCode() {
+<span class="fc" id="L256">        int result = Objects.hash(date, pkOperation, sum, node, nextexecute);</span>
+<span class="fc" id="L257">        result = 31 * result + Arrays.hashCode(icon);</span>
+<span class="fc" id="L258">        return result;</span>
+    }
+
+
+    public void executeIsNeed() throws NegativeBalanceException {
+        /*
+          Выполняем операцию, если нужно
+          */
+<span class="nc bnc" id="L266" title="All 2 branches missed.">        if(isNeedExecuteNow()){</span>
+<span class="nc bnc" id="L267" title="All 2 branches missed.">            if(fromBill !=  null) {</span>
+<span class="nc" id="L268">                fromBill.setSum(fromBill.getSum().subtract(sum));</span>
+<span class="nc bnc" id="L269" title="All 2 branches missed.">                if(fromBill.getSum().doubleValue() &lt; 0){</span>
+<span class="nc" id="L270">                   throw new NegativeBalanceException();</span>
+                }
+<span class="nc" id="L272">                new BillDAO().update(fromBill);</span>
+            }
+<span class="nc bnc" id="L274" title="All 2 branches missed.">            if(toBill !=  null) {</span>
+<span class="nc" id="L275">                toBill.setSum(toBill.getSum().add(sum));</span>
+<span class="nc" id="L276">                new BillDAO().update(toBill);</span>
+            }
+
+<span class="nc bnc" id="L279" title="All 6 branches missed.">            if(nextexecute != null &amp;&amp; (getNextDateExecuteWithoutTime().isBefore(LocalDate.now()) || getNextDateExecuteWithoutTime().isEqual(LocalDate.now()))){</span>
+<span class="nc" id="L280">                setNextExecuteDateByPeriod();</span>
+<span class="nc" id="L281">                date = nextexecute;</span>
+            }
+<span class="nc" id="L283">            setDateExecute(Timestamp.valueOf(LocalDateTime.now()));</span>
+        }
+<span class="nc" id="L285">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.4.201905082037</span></div></body></html>

@@ -1,0 +1,198 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="ru"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Controller.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">kursPatterns</a> &gt; <a href="index.source.html" class="el_package">controllers</a> &gt; <span class="el_source">Controller.java</span></div><h1>Controller.java</h1><pre class="source lang-java linenums">package controllers;
+
+import controllers.operations.*;
+import controllers.tabs.ExpendTab;
+import controllers.tabs.ProfitTab;
+import controllers.tabs.TransferTab;
+import dao.BillDAO;
+import dao.CategoryDAO;
+import dao.OperationDAO;
+import dao.TypeCategoryDAO;
+import javafx.event.ActionEvent;
+import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.fxml.Initializable;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.scene.chart.PieChart;
+import javafx.scene.control.Label;
+import javafx.scene.control.TableView;
+import javafx.stage.Stage;
+import model.Operation;
+import model.User;
+import util.MsgWindow;
+
+import java.io.IOException;
+import java.net.URL;
+import java.util.ResourceBundle;
+
+public class Controller implements Initializable {
+    private final CategoryDAO categoryDAO;
+    private final BillDAO billDAO;
+    private final TypeCategoryDAO typeCategoryDAO;
+    private Stage mainWindow;
+    private OperationDAO operationDAO;
+    private User currentUser;
+
+    @FXML private TableView&lt;Operation&gt; expendTableView;
+    @FXML private PieChart expendChart;
+    @FXML private Label todayExpendLabel;
+    @FXML private Label weekExpendLabel;
+    @FXML private Label monthExpendLabel;
+    @FXML private Label allExpendLabel;
+    @FXML private Label msgExpend;
+
+    @FXML private TableView&lt;Operation&gt; profitTableView;
+    @FXML private PieChart profitChart;
+    @FXML private Label todayProfitLabel;
+    @FXML private Label weekProfitLabel;
+    @FXML private Label monthProfitLabel;
+    @FXML private Label allProfitLabel;
+    @FXML private Label msgProfit;
+
+    @FXML private TableView&lt;Operation&gt; transferTableView;
+    @FXML private PieChart transferChart;
+    @FXML private Label todayTransferLabel;
+    @FXML private Label weekTransferLabel;
+    @FXML private Label monthTransferLabel;
+    @FXML private Label allTransferLabel;
+    @FXML private Label msgTransfer;
+
+    @FXML private ExpendTab expendTab;
+    @FXML private ProfitTab profitTab;
+    @FXML private TransferTab transferTab;
+    private ControllerOperationForm controllerOperationForm;
+<span class="nc" id="L65">    public Controller(User user) {</span>
+<span class="nc" id="L66">        operationDAO = OperationDAO.getInstance();</span>
+<span class="nc" id="L67">        categoryDAO =  new CategoryDAO();</span>
+<span class="nc" id="L68">        typeCategoryDAO = TypeCategoryDAO.getInstanse();</span>
+<span class="nc" id="L69">        billDAO = new BillDAO();</span>
+<span class="nc" id="L70">        this.currentUser = user;</span>
+<span class="nc" id="L71">        controllerOperationForm = new ControllerOperationForm(new Closed(), user);</span>
+<span class="nc" id="L72">    }</span>
+
+    @Override
+    public void initialize(URL location, ResourceBundle resources) {
+<span class="nc" id="L76">        operationDAO.addObserver(expendTab,typeCategoryDAO.getExpandType());</span>
+<span class="nc" id="L77">        expendTab.setCurrentUser(currentUser);</span>
+<span class="nc" id="L78">        expendTab.setTodayLabel(todayExpendLabel);</span>
+<span class="nc" id="L79">        expendTab.setWeekLabel(weekExpendLabel);</span>
+<span class="nc" id="L80">        expendTab.setMonthLabel(monthExpendLabel);</span>
+<span class="nc" id="L81">        expendTab.setAllLabel(allExpendLabel);</span>
+<span class="nc" id="L82">        expendTab.setChart(expendChart);</span>
+<span class="nc" id="L83">        expendTab.setMsg(msgExpend);</span>
+<span class="nc" id="L84">        expendTab.setTableView(expendTableView);</span>
+<span class="nc" id="L85">        expendTab.createTable();</span>
+<span class="nc" id="L86">        expendTab.update();</span>
+
+<span class="nc" id="L88">        operationDAO.addObserver(profitTab,typeCategoryDAO.getProfitType());</span>
+<span class="nc" id="L89">        profitTab.setCurrentUser(currentUser);</span>
+<span class="nc" id="L90">        profitTab.setTodayLabel(todayProfitLabel);</span>
+<span class="nc" id="L91">        profitTab.setWeekLabel(weekProfitLabel);</span>
+<span class="nc" id="L92">        profitTab.setMonthLabel(monthProfitLabel);</span>
+<span class="nc" id="L93">        profitTab.setAllLabel(allProfitLabel);</span>
+<span class="nc" id="L94">        profitTab.setChart(profitChart);</span>
+<span class="nc" id="L95">        profitTab.setMsg(msgProfit);</span>
+<span class="nc" id="L96">        profitTab.setTableView(profitTableView);</span>
+<span class="nc" id="L97">        profitTab.createTable();</span>
+<span class="nc" id="L98">        profitTab.update();</span>
+
+<span class="nc" id="L100">        operationDAO.addObserver(transferTab,typeCategoryDAO.getTransferType());</span>
+<span class="nc" id="L101">        transferTab.setCurrentUser(currentUser);</span>
+<span class="nc" id="L102">        transferTab.setTodayLabel(todayTransferLabel);</span>
+<span class="nc" id="L103">        transferTab.setWeekLabel(weekTransferLabel);</span>
+<span class="nc" id="L104">        transferTab.setMonthLabel(monthTransferLabel);</span>
+<span class="nc" id="L105">        transferTab.setAllLabel(allTransferLabel);</span>
+<span class="nc" id="L106">        transferTab.setChart(transferChart);</span>
+<span class="nc" id="L107">        transferTab.setMsg(msgTransfer);</span>
+<span class="nc" id="L108">        transferTab.setTableView(transferTableView);</span>
+<span class="nc" id="L109">        transferTab.createTable();</span>
+<span class="nc" id="L110">        transferTab.update();</span>
+<span class="nc" id="L111">    }</span>
+
+    public void addExpend(ActionEvent actionEvent) {
+<span class="nc" id="L114">        controllerOperationForm.setState(new ExpendFormState(controllerOperationForm,null));</span>
+<span class="nc" id="L115">        controllerOperationForm.showWindow(mainWindow);</span>
+<span class="nc" id="L116">    }</span>
+    public void addProfit(ActionEvent actionEvent){
+<span class="nc" id="L118">        controllerOperationForm.setState(new ProfitFormState(controllerOperationForm,null));</span>
+<span class="nc" id="L119">        controllerOperationForm.showWindow(mainWindow);</span>
+<span class="nc" id="L120">    }</span>
+    public void addTransfer(ActionEvent actionEvent){
+<span class="nc" id="L122">        controllerOperationForm.setState(new TransferFormState(controllerOperationForm,null));</span>
+<span class="nc" id="L123">        controllerOperationForm.showWindow(mainWindow);</span>
+<span class="nc" id="L124">    }</span>
+    public void addCategory(ActionEvent actionEvent) {
+<span class="nc" id="L126">        ControllerCategoryForm controllerCategoryForm = new ControllerCategoryForm();</span>
+<span class="nc" id="L127">        controllerCategoryForm.showWindow(mainWindow);</span>
+<span class="nc" id="L128">    }</span>
+
+    public void addLimit(ActionEvent actionEvent){
+<span class="nc" id="L131">        new ControllerLimitForm(null,currentUser).showWindow(mainWindow);</span>
+<span class="nc" id="L132">    }</span>
+
+    public void changeExpand(){
+<span class="nc" id="L135">        controllerOperationForm.setState(new ExpendFormState(controllerOperationForm,expendTab.getSelected()));</span>
+<span class="nc" id="L136">        controllerOperationForm.showWindow(mainWindow);</span>
+<span class="nc" id="L137">    }</span>
+
+    public void deleteExpand(){
+<span class="nc" id="L140">        Operation forDelete = expendTab.getSelected();</span>
+<span class="nc bnc" id="L141" title="All 2 branches missed.">        if(MsgWindow.showAsk(&quot;Вы точно хотите удалить эту запись?&quot;))</span>
+<span class="nc" id="L142">            operationDAO.delete(forDelete);</span>
+<span class="nc" id="L143">    }</span>
+
+    public void changeProfit(){
+<span class="nc" id="L146">        controllerOperationForm.setState(new ProfitFormState(controllerOperationForm,profitTab.getSelected()));</span>
+<span class="nc" id="L147">        controllerOperationForm.showWindow(mainWindow);</span>
+<span class="nc" id="L148">        }</span>
+
+    public void deleteProfit(){
+<span class="nc" id="L151">        Operation forDelete = profitTab.getSelected();</span>
+<span class="nc bnc" id="L152" title="All 2 branches missed.">        if(MsgWindow.showAsk(&quot;Вы точно хотите удалить эту запись?&quot;))</span>
+<span class="nc" id="L153">            operationDAO.delete(forDelete);</span>
+<span class="nc" id="L154">    }</span>
+
+    public void changeTransfer(){
+<span class="nc" id="L157">        controllerOperationForm.setState(new TransferFormState(controllerOperationForm,transferTab.getSelected()));</span>
+<span class="nc" id="L158">        controllerOperationForm.showWindow(mainWindow);</span>
+<span class="nc" id="L159">    }</span>
+
+    public void deleteTransfer(){
+<span class="nc" id="L162">        Operation forDelete = transferTab.getSelected();</span>
+<span class="nc bnc" id="L163" title="All 2 branches missed.">        if(MsgWindow.showAsk(&quot;Вы точно хотите удалить эту запись?&quot;))</span>
+<span class="nc" id="L164">            operationDAO.delete(forDelete);</span>
+<span class="nc" id="L165">    }</span>
+
+
+    public void changePassword(){
+<span class="nc" id="L169">        new ControllerRegistry(currentUser).showWindow(mainWindow);</span>
+<span class="nc" id="L170">    }</span>
+
+    public void showAllBills(){
+<span class="nc" id="L173">        new ControllerAllBillsForm().showWindow(mainWindow);</span>
+<span class="nc" id="L174">    }</span>
+
+<span class="nc" id="L176">    public void showAllCategories(){new ControllerAllCategoriesForm().showWindow(mainWindow);}</span>
+
+<span class="nc" id="L178">    public void showAllLimits(){new ControllerAllLimitsForm().showWindow(mainWindow);}</span>
+
+    public void showWidnow(){
+<span class="nc" id="L181">        FXMLLoader loader = new FXMLLoader(getClass().getResource(&quot;/resources/sample.fxml&quot;));</span>
+<span class="nc" id="L182">        loader.setController(this);</span>
+<span class="nc" id="L183">        mainWindow = new Stage();</span>
+        Parent root;
+        try{
+<span class="nc" id="L186">            root = loader.load();</span>
+<span class="nc" id="L187">        }catch (IOException ex){</span>
+<span class="nc" id="L188">            ex.printStackTrace();</span>
+<span class="nc" id="L189">            MsgWindow.showErrorWindow(&quot;Не получилось открыть новое окно&quot;);</span>
+<span class="nc" id="L190">            return;</span>
+<span class="nc" id="L191">        }</span>
+<span class="nc" id="L192">        mainWindow.setTitle(&quot;Домашняя бухгалтерия&quot;);</span>
+<span class="nc" id="L193">        mainWindow.setScene(new Scene(root));</span>
+<span class="nc" id="L194">        mainWindow.show();</span>
+<span class="nc" id="L195">    }</span>
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.4.201905082037</span></div></body></html>

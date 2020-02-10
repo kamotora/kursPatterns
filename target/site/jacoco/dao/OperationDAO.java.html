@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="ru"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>OperationDAO.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">kursPatterns</a> &gt; <a href="index.source.html" class="el_package">dao</a> &gt; <span class="el_source">OperationDAO.java</span></div><h1>OperationDAO.java</h1><pre class="source lang-java linenums">package dao;
+
+import interfaces.IObservable;
+import interfaces.IObserver;
+import model.Operation;
+import model.User;
+import model.categories.Category;
+import model.categories.TypeCategory;
+import util.HibernateSessionFactory;
+
+import java.sql.Date;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+
+
+public class OperationDAO extends DAO&lt;Operation&gt; implements IObservable {
+
+<span class="fc" id="L19">    static OperationDAO instance = null;</span>
+<span class="fc" id="L20">    private HashMap&lt;TypeCategory, List&lt;IObserver&gt;&gt; observers = new HashMap&lt;&gt;();</span>
+
+<span class="fc" id="L22">    private OperationDAO() {</span>
+<span class="fc" id="L23">    }</span>
+
+    public static OperationDAO getInstance() {
+<span class="fc bfc" id="L26" title="All 2 branches covered.">        if(instance == null)</span>
+<span class="fc" id="L27">            instance = new OperationDAO();</span>
+<span class="fc" id="L28">        return instance;</span>
+    }
+    public List&lt;Operation&gt; getAll(){
+<span class="nc" id="L31">        return HibernateSessionFactory.getSession().createQuery(&quot;FROM Operation&quot;,Operation.class).getResultList();</span>
+    }
+
+    public List&lt;Operation&gt; getAllByUser(User user){
+<span class="fc" id="L35">        return HibernateSessionFactory.getSession().createQuery(&quot;FROM Operation where user = &quot;+user.getPkUser(),Operation.class).getResultList();</span>
+    }
+
+    public List&lt;Operation&gt; getExpands(User user){
+<span class="fc" id="L39">        return HibernateSessionFactory.getSession().createQuery(&quot;FROM Operation where user = :user and category.type.pkType = :pkExpandType&quot;,Operation.class)</span>
+<span class="fc" id="L40">                .setParameter(&quot;user&quot;, user)</span>
+<span class="fc" id="L41">                .setParameter(&quot;pkExpandType&quot;,2)</span>
+<span class="fc" id="L42">                .getResultList();</span>
+    }
+
+    public List&lt;Operation&gt; getExpandsFromDate(User user, Date date){
+<span class="fc" id="L46">        return HibernateSessionFactory.getSession().createQuery(&quot;FROM Operation where user = :user and category.type.pkType = :pkExpandType and date &gt; :startDate&quot;,Operation.class)</span>
+<span class="fc" id="L47">                .setParameter(&quot;user&quot;, user)</span>
+<span class="fc" id="L48">                .setParameter(&quot;pkExpandType&quot;,2)</span>
+<span class="fc" id="L49">                .setParameter(&quot;startDate&quot;,date)</span>
+<span class="fc" id="L50">                .getResultList();</span>
+    }
+
+    public List&lt;Operation&gt; getProfits(User user){
+<span class="fc" id="L54">        return HibernateSessionFactory.getSession().createQuery(&quot;FROM Operation where user = :user and category.type.pkType = :pkProfitType&quot;,Operation.class)</span>
+<span class="fc" id="L55">                .setParameter(&quot;user&quot;, user)</span>
+<span class="fc" id="L56">                .setParameter(&quot;pkProfitType&quot;,1)</span>
+<span class="fc" id="L57">                .getResultList();</span>
+    }
+
+    public List&lt;Operation&gt; getTransfers(User user){
+<span class="fc" id="L61">        return HibernateSessionFactory.getSession().createQuery(&quot;FROM Operation where user = :user and category.type.pkType = :pkTransfer&quot;,Operation.class)</span>
+<span class="fc" id="L62">                .setParameter(&quot;user&quot;, user)</span>
+<span class="fc" id="L63">                .setParameter(&quot;pkTransfer&quot;,3)</span>
+<span class="fc" id="L64">                .getResultList();</span>
+    }
+    public List&lt;Operation&gt; getOperationsByType(User user, TypeCategory typeCategory){
+<span class="fc" id="L67">        return HibernateSessionFactory.getSession().createQuery(&quot;FROM Operation where user = :user and category.type.pkType = :pktype&quot;,Operation.class)</span>
+<span class="fc" id="L68">                .setParameter(&quot;user&quot;, user)</span>
+<span class="fc" id="L69">                .setParameter(&quot;pktype&quot;,typeCategory.getPkType())</span>
+<span class="fc" id="L70">                .getResultList();</span>
+    }
+
+    public List&lt;Operation&gt; getOperationsByCategory(User user, Category category){
+<span class="fc" id="L74">        return HibernateSessionFactory.getSession().createQuery(&quot;FROM Operation where user = :user and category.pkCategory = :pkCategory&quot;,Operation.class)</span>
+<span class="fc" id="L75">                .setParameter(&quot;user&quot;, user)</span>
+<span class="fc" id="L76">                .setParameter(&quot;pkCategory&quot;,category.getPkCategory())</span>
+<span class="fc" id="L77">                .getResultList();</span>
+    }
+
+    @Override
+    public Operation find(int id) {
+<span class="fc" id="L82">        return HibernateSessionFactory.getSession().find(Operation.class,id);</span>
+    }
+
+    public void addObserver(IObserver observer, TypeCategory typeCategory){
+<span class="nc" id="L86">        List&lt;IObserver&gt; list = observers.get(typeCategory);</span>
+<span class="nc bnc" id="L87" title="All 2 branches missed.">        if(list == null)</span>
+<span class="nc" id="L88">            list = new ArrayList&lt;&gt;();</span>
+<span class="nc" id="L89">        list.add(observer);</span>
+<span class="nc" id="L90">        observers.put(typeCategory,list);</span>
+<span class="nc" id="L91">    }</span>
+
+    public void notifyObservers(TypeCategory typeCategory){
+<span class="pc bpc" id="L94" title="1 of 2 branches missed.">        if(observers.get(typeCategory) == null)</span>
+<span class="fc" id="L95">            return;</span>
+<span class="nc bnc" id="L96" title="All 2 branches missed.">        for(IObserver iObserver : observers.get(typeCategory))</span>
+<span class="nc" id="L97">            iObserver.update();</span>
+<span class="nc" id="L98">    }</span>
+
+    @Override
+    public void saveOrUpdate(Operation entity) {
+<span class="fc" id="L102">        super.saveOrUpdate(entity);</span>
+<span class="fc" id="L103">        notifyObservers(entity.getCategory().getType());</span>
+<span class="fc" id="L104">    }</span>
+
+    public void deleteAllByUser(User user){
+<span class="nc" id="L107">        List&lt;Operation&gt; operations = getAllByUser(user);</span>
+<span class="nc bnc" id="L108" title="All 2 branches missed.">        for(Operation operation : operations)</span>
+<span class="nc" id="L109">            delete(operation);</span>
+<span class="nc" id="L110">    }</span>
+
+    @Override
+    public void delete(Operation entity) {
+<span class="fc" id="L114">        super.delete(entity);</span>
+<span class="fc" id="L115">        notifyObservers(entity.getCategory().getType());</span>
+<span class="fc" id="L116">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.4.201905082037</span></div></body></html>

@@ -1,15 +1,9 @@
 package model;
 
 import dao.UserDAO;
-import junit.framework.TestCase;
 import model.categories.Category;
 import org.junit.Assert;
-import org.junit.jupiter.api.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.JUnit4;
-import util.TestBCrypt;
-
-import static org.junit.jupiter.api.Assertions.*;
+import org.junit.Test;
 
 
 public class OperationBuilderTest {

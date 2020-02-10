@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="ru"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ControllerAllLimitsForm.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">kursPatterns</a> &gt; <a href="index.source.html" class="el_package">controllers</a> &gt; <span class="el_source">ControllerAllLimitsForm.java</span></div><h1>ControllerAllLimitsForm.java</h1><pre class="source lang-java linenums">package controllers;
+
+import dao.CategoryDAO;
+import dao.LimitDAO;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.fxml.Initializable;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
+import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
+import model.Limit;
+import model.categories.Category;
+import model.categories.TypeCategory;
+import util.MsgWindow;
+
+import java.io.IOException;
+import java.math.BigDecimal;
+import java.net.URL;
+import java.time.LocalDate;
+import java.util.ResourceBundle;
+
+public class ControllerAllLimitsForm implements Initializable {
+    private Stage curWindow;
+    private LimitDAO limitDAO;
+    @FXML
+    private TableView&lt;Limit&gt; tableView;
+<span class="nc" id="L33">    ControllerAllLimitsForm(){</span>
+
+<span class="nc" id="L35">    }</span>
+
+    @Override
+    public void initialize(URL location, ResourceBundle resources) {
+<span class="nc" id="L39">        limitDAO = new LimitDAO();</span>
+<span class="nc" id="L40">        createExpendTable();</span>
+<span class="nc" id="L41">        updateData();</span>
+<span class="nc" id="L42">    }</span>
+
+    public void createExpendTable(){
+<span class="nc" id="L45">        TableColumn&lt;Limit, LocalDate&gt; dateStartColumn = new TableColumn&lt;&gt;(&quot;Дата начала&quot;);</span>
+<span class="nc" id="L46">        dateStartColumn.setCellValueFactory(new PropertyValueFactory&lt;&gt;(&quot;dateSt&quot;));</span>
+<span class="nc" id="L47">        tableView.getColumns().add(dateStartColumn);</span>
+
+<span class="nc" id="L49">        TableColumn&lt;Limit, LocalDate&gt; dateFinishColumn = new TableColumn&lt;&gt;(&quot;Дата окончания&quot;);</span>
+<span class="nc" id="L50">        dateFinishColumn.setCellValueFactory(new PropertyValueFactory&lt;&gt;(&quot;dateFinish&quot;));</span>
+<span class="nc" id="L51">        tableView.getColumns().add(dateFinishColumn);</span>
+
+<span class="nc" id="L53">        TableColumn&lt;Limit, BigDecimal&gt; sumColumn = new TableColumn&lt;&gt;(&quot;Сумма лимита&quot;);</span>
+<span class="nc" id="L54">        sumColumn.setCellValueFactory(new PropertyValueFactory&lt;&gt;(&quot;sum&quot;));</span>
+<span class="nc" id="L55">        tableView.getColumns().add(sumColumn);</span>
+
+<span class="nc" id="L57">        TableColumn&lt;Limit, Double&gt; sumExpandColumn = new TableColumn&lt;&gt;(&quot;Расходов за период&quot;);</span>
+<span class="nc" id="L58">        sumExpandColumn.setCellValueFactory(new PropertyValueFactory&lt;&gt;(&quot;sumExpand&quot;));</span>
+<span class="nc" id="L59">        tableView.getColumns().add(sumExpandColumn);</span>
+<span class="nc" id="L60">        TableColumn&lt;Limit, Double&gt; sumProfitColumn = new TableColumn&lt;&gt;(&quot;Доходов за период&quot;);</span>
+<span class="nc" id="L61">        sumProfitColumn.setCellValueFactory(new PropertyValueFactory&lt;&gt;(&quot;sumProfit&quot;));</span>
+<span class="nc" id="L62">        tableView.getColumns().add(sumProfitColumn);</span>
+<span class="nc" id="L63">        TableColumn&lt;Limit, Double&gt; sumToEndColumn = new TableColumn&lt;&gt;(&quot;Осталось&quot;);</span>
+<span class="nc" id="L64">        sumToEndColumn.setCellValueFactory(new PropertyValueFactory&lt;&gt;(&quot;sumToEnd&quot;));</span>
+<span class="nc" id="L65">        tableView.getColumns().add(sumToEndColumn);</span>
+
+<span class="nc" id="L67">        TableColumn&lt;Limit, String&gt; noteColumn = new TableColumn&lt;&gt;(&quot;Примечание&quot;);</span>
+<span class="nc" id="L68">        noteColumn.setCellValueFactory(new PropertyValueFactory&lt;&gt;(&quot;node&quot;));</span>
+<span class="nc" id="L69">        tableView.getColumns().add(noteColumn);</span>
+
+<span class="nc" id="L71">    }</span>
+
+    public Limit getSelected(){
+<span class="nc" id="L74">        TableView.TableViewSelectionModel&lt;Limit&gt; selectionModel = tableView.getSelectionModel();</span>
+<span class="nc" id="L75">        Limit selected = selectionModel.getSelectedItem();</span>
+<span class="nc bnc" id="L76" title="All 2 branches missed.">        if(selected == null){</span>
+<span class="nc" id="L77">            MsgWindow.showErrorWindow(&quot;Выберите строку в таблице для редактирования&quot;);</span>
+<span class="nc" id="L78">            return null;</span>
+        }
+<span class="nc" id="L80">        return selected;</span>
+    }
+
+    public void updateData(){
+<span class="nc" id="L84">        ObservableList&lt;Limit&gt; limits = FXCollections.observableArrayList(limitDAO.getAll());</span>
+<span class="nc" id="L85">        tableView.setItems(limits);</span>
+<span class="nc" id="L86">    }</span>
+
+    public void addLimit(){
+<span class="nc" id="L89">        new ControllerCategoryForm().showWindow(curWindow);</span>
+<span class="nc" id="L90">        updateData();</span>
+<span class="nc" id="L91">    }</span>
+
+    public void changeLimit(){
+<span class="nc" id="L94">        Limit limit = getSelected();</span>
+<span class="nc bnc" id="L95" title="All 2 branches missed.">        if(limit == null)</span>
+<span class="nc" id="L96">            return;</span>
+<span class="nc" id="L97">        new ControllerLimitForm(limit,limit.getUser()).showWindow(curWindow);</span>
+<span class="nc" id="L98">        updateData();</span>
+<span class="nc" id="L99">    }</span>
+
+    public void removeLimit(){
+<span class="nc" id="L102">        Limit limit = getSelected();</span>
+<span class="nc bnc" id="L103" title="All 2 branches missed.">        if(MsgWindow.showAsk(&quot;Вы точно хотите удалить эту запись?&quot;))</span>
+<span class="nc" id="L104">            limitDAO.delete(limit);</span>
+<span class="nc" id="L105">        updateData();</span>
+<span class="nc" id="L106">    }</span>
+    public void showWindow(Stage mainWindow){
+<span class="nc" id="L108">        FXMLLoader loader = new FXMLLoader(getClass().getResource(&quot;/resources/allLimits.fxml&quot;));</span>
+<span class="nc" id="L109">        curWindow = new Stage();</span>
+<span class="nc" id="L110">        loader.setController(this);</span>
+        Parent root;
+        try{
+<span class="nc" id="L113">            root = loader.load();</span>
+<span class="nc" id="L114">        }catch (IOException ex){</span>
+<span class="nc" id="L115">            MsgWindow.showErrorWindow(&quot;Не получилось открыть новое окно&quot;);</span>
+<span class="nc" id="L116">            ex.printStackTrace();</span>
+<span class="nc" id="L117">            return;</span>
+<span class="nc" id="L118">        }</span>
+<span class="nc" id="L119">        curWindow.setTitle(&quot;Все лимиты&quot;);</span>
+<span class="nc" id="L120">        curWindow.setScene(new Scene(root));</span>
+<span class="nc" id="L121">        curWindow.initModality(Modality.WINDOW_MODAL);</span>
+<span class="nc" id="L122">        curWindow.initOwner(mainWindow);</span>
+<span class="nc" id="L123">        curWindow.showAndWait();</span>
+<span class="nc" id="L124">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.4.201905082037</span></div></body></html>

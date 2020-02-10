@@ -1,11 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="DataSourceManagerImpl" format="xml" multifile-model="true">
-    <data-source source="LOCAL" name="postgres@localhost" uuid="c64d98a4-e162-4f45-b1c4-2b82dbee7607">
+    <data-source source="LOCAL" name="postgres [2]" uuid="c64d98a4-e162-4f45-b1c4-2b82dbee7607">
       <driver-ref>postgresql</driver-ref>
       <synchronize>true</synchronize>
       <jdbc-driver>org.postgresql.Driver</jdbc-driver>
-      <jdbc-url>jdbc:postgresql://localhost:5432/postgres</jdbc-url>
+      <jdbc-url>jdbc:postgresql:///postgres</jdbc-url>
+    </data-source>
+    <data-source source="LOCAL" name="postgres" uuid="cb0bfbf5-1721-4fd1-8b14-794477ef6844">
+      <driver-ref>postgresql</driver-ref>
+      <synchronize>true</synchronize>
+      <jdbc-driver>org.postgresql.Driver</jdbc-driver>
+      <jdbc-url>jdbc:postgresql:///postgres?cloudSqlInstance=artful-willow-267716:europe-west6:postgres&amp;socketFactory=com.google.cloud.sql.postgres.SocketFactory</jdbc-url>
+      <driver-properties>
+        <property name="socketFactory" value="com.google.cloud.sql.postgres.SocketFactory" />
+        <property name="cloudSqlInstance" value="artful-willow-267716:europe-west6:postgres" />
+      </driver-properties>
     </data-source>
   </component>
 </project>

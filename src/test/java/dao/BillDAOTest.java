@@ -17,7 +17,12 @@ public class BillDAOTest {
         bill = new Bill();
         bill.setName("test");
         bill.setSum(BigDecimal.valueOf(111));
-        billDAO.saveOrUpdate(bill);
+        //TODO Убрать
+        try {
+            billDAO.save(bill);
+        }catch (Exception e){
+            billDAO.update(bill);
+        }
     }
 
     @AfterClass

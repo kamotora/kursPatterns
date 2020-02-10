@@ -18,7 +18,7 @@ public class UserDAO extends DAO<User> {
         return HibernateSessionFactory.getSession().createNamedQuery(User.ALL_USERS, User.class).getResultList();
     }
 
-    public void addUser(String login, String password) throws UserAlreadyExistsException {
+    public User addUser(String login, String password) throws UserAlreadyExistsException {
         if (findByLogin(login) != null) {
             throw new UserAlreadyExistsException();
         }
@@ -26,6 +26,7 @@ public class UserDAO extends DAO<User> {
         user.setLogin(login);
         user.hashAndSetPass(password);
         save(user);
+        return user;
     }
 
     /**

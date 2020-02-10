@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="ru"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ControllerAllCategoriesForm.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">kursPatterns</a> &gt; <a href="index.source.html" class="el_package">controllers</a> &gt; <span class="el_source">ControllerAllCategoriesForm.java</span></div><h1>ControllerAllCategoriesForm.java</h1><pre class="source lang-java linenums">package controllers;
+
+import dao.CategoryDAO;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.fxml.Initializable;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.scene.control.Label;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
+import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
+import model.Bill;
+import model.categories.Category;
+import model.categories.TypeCategory;
+import util.MsgWindow;
+
+import java.io.IOException;
+import java.math.BigDecimal;
+import java.net.URL;
+import java.util.ResourceBundle;
+
+public class ControllerAllCategoriesForm implements Initializable {
+    private Stage curWindow;
+    private CategoryDAO categoryDAO;
+    @FXML
+    private TableView&lt;Category&gt; tableView;
+<span class="nc" id="L32">    ControllerAllCategoriesForm(){</span>
+
+<span class="nc" id="L34">    }</span>
+
+    @Override
+    public void initialize(URL location, ResourceBundle resources) {
+<span class="nc" id="L38">        categoryDAO = new CategoryDAO();</span>
+<span class="nc" id="L39">        createExpendTable();</span>
+<span class="nc" id="L40">        updateData();</span>
+<span class="nc" id="L41">    }</span>
+
+    public void createExpendTable(){
+<span class="nc" id="L44">        TableColumn&lt;Category, TypeCategory&gt; typeColumn = new TableColumn&lt;&gt;(&quot;Тип&quot;);</span>
+        //sumColumn.setCellValueFactory(cellData -&gt; cellData.getValue().sumProperty());
+<span class="nc" id="L46">        typeColumn.setCellValueFactory(new PropertyValueFactory&lt;&gt;(&quot;type&quot;));</span>
+<span class="nc" id="L47">        tableView.getColumns().add(typeColumn);</span>
+        // столбец
+<span class="nc" id="L49">        TableColumn&lt;Category, String&gt; nameColumn = new TableColumn&lt;&gt;(&quot;Название&quot;);</span>
+<span class="nc" id="L50">        nameColumn.setCellValueFactory(new PropertyValueFactory&lt;&gt;(&quot;name&quot;));</span>
+<span class="nc" id="L51">        tableView.getColumns().add(nameColumn);</span>
+<span class="nc" id="L52">    }</span>
+
+    public Category getSelected(){
+<span class="nc" id="L55">        TableView.TableViewSelectionModel&lt;Category&gt; selectionModel = tableView.getSelectionModel();</span>
+<span class="nc" id="L56">        Category selected = selectionModel.getSelectedItem();</span>
+<span class="nc bnc" id="L57" title="All 2 branches missed.">        if(selected == null){</span>
+<span class="nc" id="L58">            MsgWindow.showErrorWindow(&quot;Выберите строку в таблице для редактирования&quot;);</span>
+<span class="nc" id="L59">            return null;</span>
+        }
+<span class="nc" id="L61">        return selected;</span>
+    }
+
+    public void updateData(){
+<span class="nc" id="L65">        ObservableList&lt;Category&gt; categories = FXCollections.observableArrayList(categoryDAO.getAll());</span>
+<span class="nc" id="L66">        tableView.setItems(categories);</span>
+<span class="nc" id="L67">    }</span>
+
+    public void addCategory(){
+<span class="nc" id="L70">        new ControllerCategoryForm().showWindow(curWindow);</span>
+<span class="nc" id="L71">        updateData();</span>
+<span class="nc" id="L72">    }</span>
+
+    public void changeCategory(){
+<span class="nc" id="L75">        Category category = getSelected();</span>
+<span class="nc bnc" id="L76" title="All 2 branches missed.">        if(category == null)</span>
+<span class="nc" id="L77">            return;</span>
+<span class="nc" id="L78">        new ControllerCategoryForm(category).showWindow(curWindow);</span>
+<span class="nc" id="L79">        updateData();</span>
+<span class="nc" id="L80">    }</span>
+
+    public void removeCategory(){
+<span class="nc" id="L83">        Category category = getSelected();</span>
+<span class="nc bnc" id="L84" title="All 2 branches missed.">        if(MsgWindow.showAsk(&quot;Вы точно хотите удалить эту запись?&quot;))</span>
+<span class="nc" id="L85">            categoryDAO.delete(category);</span>
+<span class="nc" id="L86">        updateData();</span>
+<span class="nc" id="L87">    }</span>
+    public void showWindow(Stage mainWindow){
+<span class="nc" id="L89">        FXMLLoader loader = new FXMLLoader(getClass().getResource(&quot;/resources/allCategories.fxml&quot;));</span>
+<span class="nc" id="L90">        curWindow = new Stage();</span>
+<span class="nc" id="L91">        loader.setController(this);</span>
+        Parent root;
+        try{
+<span class="nc" id="L94">            root = loader.load();</span>
+<span class="nc" id="L95">        }catch (IOException ex){</span>
+<span class="nc" id="L96">            MsgWindow.showErrorWindow(&quot;Не получилось открыть новое окно&quot;);</span>
+<span class="nc" id="L97">            ex.printStackTrace();</span>
+<span class="nc" id="L98">            return;</span>
+<span class="nc" id="L99">        }</span>
+<span class="nc" id="L100">        curWindow.setTitle(&quot;Все категории&quot;);</span>
+<span class="nc" id="L101">        curWindow.setScene(new Scene(root));</span>
+<span class="nc" id="L102">        curWindow.initModality(Modality.WINDOW_MODAL);</span>
+<span class="nc" id="L103">        curWindow.initOwner(mainWindow);</span>
+<span class="nc" id="L104">        curWindow.showAndWait();</span>
+<span class="nc" id="L105">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.4.201905082037</span></div></body></html>

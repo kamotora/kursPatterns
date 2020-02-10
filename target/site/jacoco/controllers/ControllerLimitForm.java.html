@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="ru"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ControllerLimitForm.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">kursPatterns</a> &gt; <a href="index.source.html" class="el_package">controllers</a> &gt; <span class="el_source">ControllerLimitForm.java</span></div><h1>ControllerLimitForm.java</h1><pre class="source lang-java linenums">package controllers;
+
+import dao.*;
+import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.fxml.Initializable;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.scene.control.*;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
+import model.Bill;
+import model.Limit;
+import model.Operation;
+import model.User;
+import util.MsgWindow;
+import exceptions.*;
+
+import java.io.IOException;
+import java.math.BigDecimal;
+import java.net.URL;
+import java.sql.Date;
+import java.time.LocalDate;
+import java.time.Period;
+import java.util.List;
+import java.util.ResourceBundle;
+
+public class ControllerLimitForm implements Initializable {
+    private Limit limit;
+    private Stage curWindow;
+    @FXML
+    private DatePicker dateStartField;
+    @FXML
+    private DatePicker dateEndField;
+    @FXML
+    private TextField sumField;
+    @FXML
+    private TextArea noteField;
+    @FXML
+    private Button saveButton;
+    @FXML
+    private Label infoLabel;
+    private User currentUser;
+<span class="fc" id="L44">    ControllerLimitForm(Limit Limit, User currentUser){</span>
+<span class="fc" id="L45">        this.limit = Limit;</span>
+<span class="fc" id="L46">        this.currentUser = currentUser;</span>
+<span class="fc" id="L47">    }</span>
+
+    @Override
+    public void initialize(URL location, ResourceBundle resources) {
+<span class="nc" id="L51">        List&lt;model.categories.Category&gt; categoryList = new CategoryDAO().getCategoryByType(TypeCategoryDAO.getInstanse().getExpandType());</span>
+<span class="nc" id="L52">        List&lt;Bill&gt; billList = new BillDAO().getAll();</span>
+<span class="nc bnc" id="L53" title="All 2 branches missed.">        if(limit != null){</span>
+<span class="nc" id="L54">            Date datestart = limit.getDatestart();</span>
+<span class="nc" id="L55">            dateStartField.setValue(datestart.toLocalDate());</span>
+
+<span class="nc" id="L57">            Date dateEnd = limit.getDatestart();</span>
+<span class="nc" id="L58">            dateEndField.setValue(dateEnd.toLocalDate());</span>
+
+<span class="nc" id="L60">            sumField.setText(String.valueOf(limit.getSum()));</span>
+<span class="nc" id="L61">            noteField.setText(limit.getNode());</span>
+<span class="nc" id="L62">            saveButton.setText(&quot;Изменить&quot;);</span>
+<span class="nc" id="L63">        }</span>
+        else {
+<span class="nc" id="L65">            dateStartField.setValue(LocalDate.now());</span>
+<span class="nc" id="L66">            dateEndField.setValue(LocalDate.now().plusMonths(1));</span>
+<span class="nc" id="L67">            saveButton.setText(&quot;Добавить&quot;);</span>
+            //sumField.setText(&quot;0.0&quot;);
+        }
+<span class="nc" id="L70">    }</span>
+
+    public void save(){
+<span class="nc" id="L73">        Date dateStart = Date.valueOf(dateStartField.getValue());</span>
+<span class="nc" id="L74">        Date dateFinish = Date.valueOf(dateEndField.getValue());</span>
+<span class="nc" id="L75">        String note = noteField.getText();</span>
+        BigDecimal sum;
+        try{
+<span class="nc" id="L78">            sum = BigDecimal.valueOf(Double.parseDouble(sumField.getText()));</span>
+<span class="nc" id="L79">        }catch (NumberFormatException exp){</span>
+<span class="nc" id="L80">            MsgWindow.showErrorWindow(&quot;Стоимость указана не верно&quot;);</span>
+<span class="nc" id="L81">            return;</span>
+<span class="nc" id="L82">        }</span>
+<span class="nc bnc" id="L83" title="All 2 branches missed.">        if(limit == null){</span>
+<span class="nc" id="L84">            limit = new Limit();</span>
+<span class="nc" id="L85">            limit.setUser(currentUser);</span>
+        }
+<span class="nc" id="L87">        limit.setDatestart(dateStart);</span>
+<span class="nc" id="L88">        limit.setDateend(dateFinish);</span>
+<span class="nc" id="L89">        limit.setSum(sum);</span>
+<span class="nc bnc" id="L90" title="All 4 branches missed.">        if(note != null &amp;&amp; !note.isEmpty())</span>
+<span class="nc" id="L91">            limit.setNode(note);</span>
+<span class="nc" id="L92">        new LimitDAO().saveOrUpdate(limit);</span>
+<span class="nc" id="L93">        MsgWindow.showInfoWindow(&quot;Выполнено!&quot;);</span>
+<span class="nc" id="L94">        curWindow.close();</span>
+<span class="nc" id="L95">    }</span>
+
+    /**
+     * Получить сумму расходов за период с now - (finishDate - startDate) по now
+     * @param startDate начало периода
+     * @param finishDate конец периода
+     * @return искомая сумма
+     * */
+    public double getSumOperationsByPeriod(LocalDate startDate, LocalDate finishDate) throws Exception{
+<span class="pc bpc" id="L104" title="2 of 4 branches missed.">        if(startDate == null || finishDate == null){</span>
+<span class="nc" id="L105">            throw new NullPointerException(&quot;Дата == null&quot;);</span>
+        }
+<span class="pc bpc" id="L107" title="1 of 2 branches missed.">        if(finishDate.isBefore(startDate)){</span>
+<span class="nc" id="L108">            throw new FinishDateBeforeStartDateException();</span>
+        }
+<span class="fc" id="L110">        Period period = Period.between(startDate,finishDate);</span>
+<span class="fc" id="L111">        LocalDate curStartDate = LocalDate.now().minus(period);</span>
+<span class="fc" id="L112">        List&lt;Operation&gt; operations = OperationDAO.getInstance().getExpandsFromDate(currentUser,Date.valueOf(curStartDate));</span>
+<span class="fc" id="L113">        double sum = 0;</span>
+<span class="fc bfc" id="L114" title="All 2 branches covered.">        for(Operation operation : operations)</span>
+<span class="fc" id="L115">            sum += operation.getSum().doubleValue();</span>
+<span class="fc" id="L116">        return sum;</span>
+    }
+    public void updateMsg(){
+<span class="nc" id="L119">        double sum = 0;</span>
+        try{
+<span class="nc" id="L121">            sum = getSumOperationsByPeriod(dateStartField.getValue(), dateEndField.getValue());</span>
+<span class="nc" id="L122">        }catch (Exception e){</span>
+<span class="nc" id="L123">            System.out.println(e.toString());</span>
+<span class="nc" id="L124">            return;</span>
+<span class="nc" id="L125">        }</span>
+<span class="nc" id="L126">        infoLabel.setText(&quot;За аналогичный период  вы потратили: &quot;+String.format(&quot;%.2f&quot;,sum));</span>
+<span class="nc" id="L127">        sumField.setText(String.format(&quot;%.2f&quot;,sum));</span>
+<span class="nc" id="L128">    }</span>
+
+    public void showWindow(Stage mainWindow){
+<span class="nc" id="L131">        FXMLLoader loader = new FXMLLoader(getClass().getResource(&quot;/resources/limit.fxml&quot;));</span>
+<span class="nc" id="L132">        curWindow = new Stage();</span>
+<span class="nc" id="L133">        loader.setController(this);</span>
+        Parent root;
+        try{
+<span class="nc" id="L136">            root = loader.load();</span>
+<span class="nc" id="L137">        }catch (IOException ex){</span>
+<span class="nc" id="L138">            MsgWindow.showErrorWindow(&quot;Не получилось открыть новое окно&quot;);</span>
+<span class="nc" id="L139">            ex.printStackTrace();</span>
+<span class="nc" id="L140">            return;</span>
+<span class="nc" id="L141">        }</span>
+<span class="nc bnc" id="L142" title="All 2 branches missed.">        if(limit == null)</span>
+<span class="nc" id="L143">            curWindow.setTitle(&quot;Добавление лимита&quot;);</span>
+        else
+<span class="nc" id="L145">            curWindow.setTitle(&quot;Изменение лимита&quot;);</span>
+<span class="nc" id="L146">        curWindow.setScene(new Scene(root));</span>
+<span class="nc" id="L147">        curWindow.initModality(Modality.WINDOW_MODAL);</span>
+<span class="nc" id="L148">        curWindow.initOwner(mainWindow);</span>
+<span class="nc" id="L149">        curWindow.showAndWait();</span>
+<span class="nc" id="L150">    }</span>
+
+    public void close(){
+<span class="nc" id="L153">        curWindow.close();</span>
+<span class="nc" id="L154">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.4.201905082037</span></div></body></html>

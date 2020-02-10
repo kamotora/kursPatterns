@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="ru"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>TypeCategory.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">kursPatterns</a> &gt; <a href="index.source.html" class="el_package">model.categories</a> &gt; <span class="el_source">TypeCategory.java</span></div><h1>TypeCategory.java</h1><pre class="source lang-java linenums">package model.categories;
+
+import javax.persistence.*;
+import java.util.Objects;
+
+@Entity
+@Table(name = &quot;typecategory&quot;)
+<span class="fc" id="L8">public class TypeCategory {</span>
+    private String name;
+    private int pkType;
+
+    @Basic
+    @Column(name = &quot;name&quot;, nullable = false, length = -1)
+    public String getName() {
+<span class="nc" id="L15">        return name;</span>
+    }
+
+    public void setName(String name) {
+<span class="fc" id="L19">        this.name = name;</span>
+<span class="fc" id="L20">    }</span>
+
+    @Id
+    @Column(name = &quot;pk_type&quot;, nullable = false)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    public int getPkType() {
+        return pkType;
+    }
+
+    public void setPkType(int pkType) {
+<span class="fc" id="L30">        this.pkType = pkType;</span>
+<span class="fc" id="L31">    }</span>
+
+    @Override
+    public boolean equals(Object o) {
+<span class="pc bpc" id="L35" title="1 of 2 branches missed.">        if (this == o) return true;</span>
+<span class="pc bpc" id="L36" title="2 of 4 branches missed.">        if (o == null || getClass() != o.getClass()) return false;</span>
+<span class="fc" id="L37">        TypeCategory that = (TypeCategory) o;</span>
+<span class="fc bfc" id="L38" title="All 2 branches covered.">        return pkType == that.pkType &amp;&amp;</span>
+<span class="pc bpc" id="L39" title="1 of 2 branches missed.">                Objects.equals(name, that.name);</span>
+    }
+
+    @Override
+    public int hashCode() {
+<span class="fc" id="L44">        return Objects.hash(name, pkType);</span>
+    }
+
+    @Override
+    public String toString() {
+<span class="nc" id="L49">        return name;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.4.201905082037</span></div></body></html>

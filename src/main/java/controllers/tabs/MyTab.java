@@ -38,7 +38,7 @@ public class MyTab extends Tab {
     protected User currentUser;
     protected CategoryDAO categoryDAO;
     protected TypeCategoryDAO typeCategoryDAO;
-
+    protected static final String PRINT_PRICE_MASK = "%.2f руб.";
     public void createTable(){
         operationDAO = OperationDAO.getInstance();
         categoryDAO = new CategoryDAO();
@@ -63,6 +63,7 @@ public class MyTab extends Tab {
         tableView.getColumns().add(periodColumnExpand);
     }
 
+
     public void update(TypeCategory typeCategory) {
         ObservableList<Operation> oper = FXCollections.observableArrayList(operationDAO.getOperationsByType(currentUser, typeCategory));
         tableView.setItems(oper);
@@ -76,37 +77,32 @@ public class MyTab extends Tab {
         for(Category category : categories){
             Set<Operation> operations = category.getOperations();
             if(!operations.isEmpty()){
-                BigDecimal sum = new BigDecimal(0);
-                for(Operation operation: operations) {
-                    double cur = operation.getSum().doubleValue();
-
-                    LocalDate date = operation.getDate().toLocalDateTime().toLocalDate();
-                    if(date.isEqual(LocalDate.now())){
-                        stat[0] += cur;
-                    }
-                    if(date.isAfter(LocalDate.now().minusWeeks(1))) {
-                        stat[1] += cur;
-                    }
-
-                    if(date.isAfter(LocalDate.now().minusMonths(1))) {
-                        stat[2] += cur;
-                    }
-                    stat[3] += cur;
-                    todayLabel.setText(String.format("%.2f руб.", stat[0]));
-                    weekLabel.setText(String.format("%.2f руб.", stat[1]));
-                    monthLabel.setText(String.format("%.2f руб.", stat[2]));
-                    allLabel.setText(String.format("%.2f руб.", stat[3]));
-
-                    try {
-                        operation.executeIsNeed();
-                        OperationDAO.getInstance().update(operation);
-                    }catch (NegativeBalanceException e) {
-                        msg.setText("Для счёта "+operation.getFromBill().getName()+" расходы превышают доходы");
-                    }
-                    sum = sum.add(BigDecimal.valueOf(cur));
-                }
-                chart.getData().add(new PieChart.Data(category.getName(),sum.doubleValue()));
+                continue;
             }
+            BigDecimal sum = new BigDecimal(0);
+            for(Operation operation: operations) {
+                double cur = operation.getSum().doubleValue();
+
+                LocalDate date = operation.getDate().toLocalDateTime().toLocalDate();
+                if(date.isEqual(LocalDate.now())){
+                    stat[0] += cur;
+                }
+                if(date.isAfter(LocalDate.now().minusWeeks(1))) {
+                    stat[1] += cur;
+                }
+
+                if(date.isAfter(LocalDate.now().minusMonths(1))) {
+                    stat[2] += cur;
+                }
+                stat[3] += cur;
+                todayLabel.setText(String.format(PRINT_PRICE_MASK, stat[0]));
+                weekLabel.setText(String.format(PRINT_PRICE_MASK, stat[1]));
+                monthLabel.setText(String.format(PRINT_PRICE_MASK, stat[2]));
+                allLabel.setText(String.format(PRINT_PRICE_MASK, stat[3]));
+                OperationDAO.getInstance().executeOperationIsNeed(operation);
+                sum = sum.add(BigDecimal.valueOf(cur));
+            }
+            chart.getData().add(new PieChart.Data(category.getName(),sum.doubleValue()));
         }
     }
 
@@ -145,7 +141,6 @@ public class MyTab extends Tab {
 
     public Operation getSelected(){
         TableView.TableViewSelectionModel<Operation> selectionModel = null;
-
         selectionModel = tableView.getSelectionModel();
         Operation selected = selectionModel.getSelectedItem();
         if(selected == null){

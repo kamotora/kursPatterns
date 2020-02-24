@@ -96,7 +96,7 @@ public class Bill {
         double res = 0;
         for(Operation operation : expands)
             res += operation.getSum().doubleValue();
-        sumExpands = new SimpleObjectProperty<BigDecimal>();
+        sumExpands = new SimpleObjectProperty<>();
         sumExpands.setValue(BigDecimal.valueOf(res));
         return sumExpands.getValue();
     }

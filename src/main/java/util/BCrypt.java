@@ -68,7 +68,7 @@ public class BCrypt {
 
 	// Blowfish parameters
 	private static final int BLOWFISH_NUM_ROUNDS = 16;
-
+	private static final String UTF8 = "UTF-8";
 	// Initial contents of key schedule
 	private static final int P_orig[] = {
 		0x243f6a88, 0x85a308d3, 0x13198a2e, 0x03707344,
@@ -674,7 +674,7 @@ public class BCrypt {
 
 		real_salt = salt.substring(off + 3, off + 25);
 		try {
-			passwordb = (password + (minor >= 'a' ? "\000" : "")).getBytes("UTF-8");
+			passwordb = (password + (minor >= 'a' ? "\000" : "")).getBytes(UTF8);
 		} catch (UnsupportedEncodingException uee) {
 			throw new AssertionError("UTF-8 is not supported");
 		}
@@ -763,8 +763,8 @@ public class BCrypt {
 		byte try_bytes[];
 		try {
 			String try_pw = hashpw(plaintext, hashed);
-			hashed_bytes = hashed.getBytes("UTF-8");
-			try_bytes = try_pw.getBytes("UTF-8");
+			hashed_bytes = hashed.getBytes(UTF8);
+			try_bytes = try_pw.getBytes(UTF8);
 		} catch (UnsupportedEncodingException uee) {
 			return false;
 		}

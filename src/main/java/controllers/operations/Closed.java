@@ -1,8 +1,5 @@
 package controllers.operations;
 
-import exceptions.EqualsBills;
-import exceptions.FromBillNotChoosed;
-import exceptions.ToBillNotChoosed;
 import interfaces.IState;
 import javafx.fxml.FXMLLoader;
 import javafx.stage.Stage;
@@ -28,12 +25,14 @@ public class Closed implements IState {
 
     @Override
     public void setBills() {
-
+        // При данном состоянии не выполняется никаких действий
+        throw new UnsupportedOperationException("При данном состоянии не выполняется никаких действий");
     }
 
     @Override
     public void saveBills(OperationBuilder operationBuilder){
-
+        // При данном состояние не выполняется никаких действий
+        throw new UnsupportedOperationException("При данном состояние не выполняется никаких действий");
     }
 
     @Override

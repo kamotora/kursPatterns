@@ -61,6 +61,9 @@ public class Controller implements Initializable {
     @FXML private ExpendTab expendTab;
     @FXML private ProfitTab profitTab;
     @FXML private TransferTab transferTab;
+
+    private static final String ASK_DELETE_ITEM = "Вы точно хотите удалить эту запись?";
+
     private ControllerOperationForm controllerOperationForm;
     public Controller(User user) {
         operationDAO = OperationDAO.getInstance();
@@ -138,7 +141,7 @@ public class Controller implements Initializable {
 
     public void deleteExpand(){
         Operation forDelete = expendTab.getSelected();
-        if(MsgWindow.showAsk("Вы точно хотите удалить эту запись?"))
+        if(MsgWindow.showAsk(ASK_DELETE_ITEM))
             operationDAO.delete(forDelete);
     }
 
@@ -149,7 +152,7 @@ public class Controller implements Initializable {
 
     public void deleteProfit(){
         Operation forDelete = profitTab.getSelected();
-        if(MsgWindow.showAsk("Вы точно хотите удалить эту запись?"))
+        if(MsgWindow.showAsk(ASK_DELETE_ITEM))
             operationDAO.delete(forDelete);
     }
 
@@ -160,7 +163,7 @@ public class Controller implements Initializable {
 
     public void deleteTransfer(){
         Operation forDelete = transferTab.getSelected();
-        if(MsgWindow.showAsk("Вы точно хотите удалить эту запись?"))
+        if(MsgWindow.showAsk(ASK_DELETE_ITEM))
             operationDAO.delete(forDelete);
     }
 

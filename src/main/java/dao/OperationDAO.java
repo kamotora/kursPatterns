@@ -1,5 +1,6 @@
 package dao;
 
+import exceptions.NegativeBalanceException;
 import interfaces.IObservable;
 import interfaces.IObserver;
 import model.Operation;
@@ -113,5 +114,14 @@ public class OperationDAO extends DAO<Operation> implements IObservable {
     public void delete(Operation entity) {
         super.delete(entity);
         notifyObservers(entity.getCategory().getType());
+    }
+
+    public void executeOperationIsNeed(Operation operation){
+        try {
+            operation.executeIsNeed();
+            OperationDAO.getInstance().update(operation);
+        }catch (NegativeBalanceException e) {
+            System.out.println("Для счёта "+operation.getFromBill().getName()+" расходы превышают доходы");
+        }
     }
 }

@@ -14,7 +14,6 @@ import javafx.stage.Stage;
 import model.User;
 import util.MsgWindow;
 
-import javax.xml.soap.Text;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -55,39 +54,29 @@ public class ControllerRegistry implements Initializable {
 
     public void execute(){
         UserDAO  userDAO = new UserDAO();
-        if(user != null){
-            try{
-                if(user.checkPassword(oldPassword.getText())){
-                    if(newPassword1.getText().compareTo(newPassword2.getText()) == 0){
-                        user.hashAndSetPass(newPassword1.getText());
-                        userDAO.update(user);
-                        MsgWindow.showInfoWindow("Успех!");
-
-                        window.close();
-                    }
-                    else
-                        MsgWindow.showErrorWindow("Новые пароли не совпадают");
-                }else
-                    MsgWindow.showErrorWindow("Старый пароль не такой");
-
-            }catch (Exception e){
-                MsgWindow.showErrorWindow("Ошибка!\n"+e);
-            }
-        }else{
-            if(newPassword1.getText().compareTo(newPassword2.getText()) == 0){
-                try{
-                    userDAO.addUser(loginField.getText(), newPassword1.getText());
-                    MsgWindow.showInfoWindow("Успех!");
-                    window.close();
-                }catch (Exception e){
-                    e.printStackTrace();
-                    MsgWindow.showErrorWindow("Ошибка!\n"+e);
-                }
-            }
-            else
-                MsgWindow.showErrorWindow("Новые пароли не совпадают");
+        if(newPassword1.getText().compareTo(newPassword2.getText()) != 0){
+            MsgWindow.showErrorWindow("Новые пароли не совпадают");
+            return;
         }
-
+        if(user != null){
+            if(!user.checkPassword(oldPassword.getText())){
+                MsgWindow.showErrorWindow("Старый пароль не такой");
+                return;
+            }
+            user.hashAndSetPass(newPassword1.getText());
+            userDAO.update(user);
+        }
+        else{
+            try{
+                userDAO.addUser(loginField.getText(), newPassword1.getText());
+            }catch (Exception e){
+                e.printStackTrace();
+                MsgWindow.showErrorWindow("Ошибка!\n"+e);
+                return;
+            }
+        }
+        MsgWindow.showInfoWindow("Успех!");
+        window.close();
     }
 
     public void showWindow(Stage mainWindow){

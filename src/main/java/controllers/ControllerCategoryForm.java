@@ -1,6 +1,5 @@
 package controllers;
 
-import dao.CategoryDAO;
 import dao.CategoryFactory;
 import dao.TypeCategoryDAO;
 import javafx.collections.FXCollections;

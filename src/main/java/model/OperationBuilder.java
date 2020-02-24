@@ -113,6 +113,7 @@ public class OperationBuilder {
             switch (period.getPkPeriod()){
                 case 1:
                     nextexecute = Timestamp.valueOf(date.toLocalDateTime().plusDays(1));
+                    break;
                 case 2:
                     nextexecute = Timestamp.valueOf(date.toLocalDateTime().plusWeeks(1));
                     break;

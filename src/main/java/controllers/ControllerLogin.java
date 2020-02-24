@@ -7,14 +7,11 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
-import javafx.stage.Modality;
 import javafx.stage.Stage;
 import model.User;
 import util.MsgWindow;
 
 import java.io.IOException;
-
-import static com.sun.javafx.scene.control.skin.Utils.getResource;
 
 public class ControllerLogin {
     private Stage window;
@@ -22,9 +19,6 @@ public class ControllerLogin {
     private TextField loginField;
     @FXML
     private PasswordField passwordField;
-
-    public ControllerLogin(){
-    }
 
     public void login(){
         String login = loginField.getText();
